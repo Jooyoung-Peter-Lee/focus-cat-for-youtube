@@ -52,7 +52,13 @@ Backend: Vercel serverless + Supabase
 
 ⬜ LemonSqueezy 스토어 활성화 (PayPal 계좌 인증 대기 중 🔴 블로커)
 ⬜ End-to-end 테스트 (실제 키 구매 → 활성화)
-⬜ Chrome Web Store listing preparation (screenshots, description, privacy policy)
+
+✅ GitHub 레포 생성 + 초기 커밋 (github.com/Jooyoung-Peter-Lee/focus-cat-for-youtube)
+✅ 개인정보처리방침 작성 (docs/store/privacy-policy.html) — GitHub Pages 배포 완료
+✅ 스토어 설명문 초안 (docs/store/store-listing.md)
+✅ 스크린샷 촬영 가이드 (docs/store/screenshot-guide.md)
+⬜ 스크린샷 5장 실제 촬영
+⬜ Chrome Developer 계정 등록 ($5 one-time)
 ⬜ Store submission & review
 
 Goal:
