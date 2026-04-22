@@ -1,0 +1,464 @@
+/* src/options/options.css */
+/* Focus Cat options page styles.
+   Opens in a new browser tab — full-page layout, max-width container.
+   Section-card pattern: each group of related settings in its own card.
+   CSS custom properties match the popup's naming convention. */
+
+/* ── Reset & base ──────────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-ok:       #22c55e;
+  --color-error:    #ef4444;
+  --color-accent:   #6366f1;
+
+  --text-primary:   #111827;
+  --text-secondary: #6b7280;
+  --text-muted:     #9ca3af;
+
+  --bg-page:        #f9fafb;
+  --bg-surface:     #ffffff;
+  --border:         #e5e7eb;
+  --border-focus:   #6366f1;
+
+  --radius-sm:      6px;
+  --radius:         12px;
+  --font:           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  background: var(--bg-page);
+  font-family: var(--font);
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  padding: 40px 16px 80px;
+}
+
+/* ── Page container ────────────────────────────────────────────────────────── */
+
+.page {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ── Page header ───────────────────────────────────────────────────────────── */
+
+.page-header {
+  margin-bottom: 32px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ── Section cards ─────────────────────────────────────────────────────────── */
+
+.section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+/* ── Field rows ────────────────────────────────────────────────────────────── */
+
+.field {
+  margin-bottom: 20px;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.field-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
+/* ── Number input ──────────────────────────────────────────────────────────── */
+
+.input-number {
+  width: 100px;
+  padding: 8px 12px;
+  font-size: 15px;
+  font-family: var(--font);
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.15s ease;
+  -moz-appearance: textfield;
+}
+
+.input-number::-webkit-outer-spin-button,
+.input-number::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.input-number:focus {
+  border-color: var(--border-focus);
+}
+
+.input-number.is-invalid {
+  border-color: var(--color-error);
+}
+
+/* ── Field-level validation error ──────────────────────────────────────────── */
+
+.field-error {
+  font-size: 12px;
+  color: var(--color-error);
+  margin-top: 4px;
+  display: none;
+}
+
+.field-error.is-visible {
+  display: block;
+}
+
+/* ── Radio group ───────────────────────────────────────────────────────────── */
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.radio-option:has(input:checked) {
+  border-color: var(--color-accent);
+  background: #f5f3ff;
+}
+
+.radio-option input[type="radio"] {
+  margin-top: 2px;
+  accent-color: var(--color-accent);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.radio-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.radio-desc {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+/* ── Checkbox rows ─────────────────────────────────────────────────────────── */
+
+.checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.checkbox-row:last-child {
+  margin-bottom: 0;
+}
+
+.checkbox-row input[type="checkbox"] {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-accent);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.checkbox-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  line-height: 1.3;
+}
+
+.checkbox-hint {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-top: 3px;
+}
+
+/* ── Pro badge ─────────────────────────────────────────────────────────────── */
+
+.badge-pro {
+  display: inline-block;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7c3aed;
+  background: #ede9fe;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+/* ── Locked radio option (Pro-gated) ───────────────────────────────────────── */
+
+.radio-option.is-locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.radio-option.is-locked input[type="radio"] {
+  cursor: not-allowed;
+}
+
+/* ── Pro status row ────────────────────────────────────────────────────────── */
+
+.pro-status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.pro-status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 99px;
+  flex-shrink: 0;
+}
+
+.pro-status-badge.is-free {
+  color: var(--text-secondary);
+  background: #f3f4f6;
+}
+
+.pro-status-badge.is-pro {
+  color: #5b21b6;
+  background: #ede9fe;
+}
+
+.pro-status-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ── Pro feature list ──────────────────────────────────────────────────────── */
+
+.pro-feature-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  background: #fafafa;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.pro-feature-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.pro-feature-check {
+  color: #7c3aed;
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.pro-feature-soon {
+  color: var(--text-muted);
+}
+
+.pro-feature-soon .pro-feature-check {
+  color: var(--text-muted);
+}
+
+/* ── License key input ─────────────────────────────────────────────────────── */
+
+.license-activate-section {
+  margin-bottom: 16px;
+}
+
+.license-input-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.input-text {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: var(--font);
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.15s ease;
+  letter-spacing: 0.03em;
+}
+
+.input-text:focus {
+  border-color: var(--border-focus);
+}
+
+.input-text.is-invalid {
+  border-color: var(--color-error);
+}
+
+.license-activate-btn {
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font);
+  color: #ffffff;
+  background: #7c3aed;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+  flex-shrink: 0;
+}
+
+.license-activate-btn:hover   { opacity: 0.85; }
+.license-activate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.license-deactivate-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.license-deactivate-btn {
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font);
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.license-deactivate-btn:hover {
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+/* ── Save row ──────────────────────────────────────────────────────────────── */
+
+.save-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.save-btn {
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font);
+  color: #ffffff;
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.save-btn:hover {
+  opacity: 0.88;
+}
+
+.save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Save status message ───────────────────────────────────────────────────── */
+
+.save-status {
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.save-status.is-visible {
+  opacity: 1;
+}
+
+.save-status.is-ok    { color: var(--color-ok);    }
+.save-status.is-error { color: var(--color-error);  }

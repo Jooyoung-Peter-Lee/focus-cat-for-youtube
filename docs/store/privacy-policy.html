@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Focus Cat for YouTube</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 720px; margin: 40px auto; padding: 0 24px; color: #333; line-height: 1.7; }
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.2rem; margin-top: 2rem; }
+    p, li { font-size: 0.95rem; }
+    a { color: #0066cc; }
+    footer { margin-top: 3rem; font-size: 0.85rem; color: #888; }
+  </style>
+</head>
+<body>
+  <h1>Privacy Policy</h1>
+  <p><strong>Focus Cat for YouTube</strong> — Chrome Extension<br>
+  Last updated: April 22, 2026</p>
+
+  <h2>1. Overview</h2>
+  <p>Focus Cat for YouTube is a browser extension that helps you limit your daily YouTube watch time and remove on-screen distractions. We are committed to protecting your privacy. This policy explains what data the extension collects and how it is used.</p>
+
+  <h2>2. Data Collected and Stored Locally</h2>
+  <p>All usage data is stored <strong>locally on your device</strong> using the Chrome <code>storage.local</code> API and is never transmitted to any server.</p>
+  <ul>
+    <li><strong>Daily watch time</strong> — cumulative seconds watched on YouTube today, reset each midnight.</li>
+    <li><strong>User settings</strong> — your configured daily limit, mode (Soft / Hard), and any time extensions granted.</li>
+    <li><strong>License key</strong> (Pro users only) — stored locally after activation. Never logged or shared.</li>
+  </ul>
+
+  <h2>3. Data Sent to External Servers</h2>
+  <p>The extension contacts our backend (<code>https://focus-cat-api.vercel.app</code>) <strong>only</strong> in the following two cases:</p>
+  <ul>
+    <li><strong>License activation</strong> — when you enter a license key, the key is sent to our API to verify it with Lemon Squeezy and register the activation on your device.</li>
+    <li><strong>License deactivation</strong> — when you click "Deactivate", the key is sent to release the activation.</li>
+  </ul>
+  <p>No personal information (name, email, IP address) is stored by our API. The key is forwarded to Lemon Squeezy's API for validation and immediately discarded.</p>
+
+  <h2>4. Data We Do NOT Collect</h2>
+  <ul>
+    <li>No browsing history or YouTube watch history</li>
+    <li>No analytics or usage telemetry</li>
+    <li>No crash reports</li>
+    <li>No personal identifiers of any kind</li>
+  </ul>
+
+  <h2>5. Third-Party Services</h2>
+  <p><strong>Lemon Squeezy</strong> processes payments and issues license keys. When you purchase the Pro tier, Lemon Squeezy collects payment information per their own <a href="https://www.lemonsqueezy.com/privacy" target="_blank">Privacy Policy</a>. Focus Cat does not receive or store your payment details.</p>
+
+  <h2>6. Permissions Used</h2>
+  <ul>
+    <li><code>storage</code> — save settings and watch-time data locally.</li>
+    <li><code>alarms</code> — schedule the daily midnight reset.</li>
+    <li><code>tabs</code> / <code>windows</code> — detect when YouTube is active to pause/resume time tracking.</li>
+  </ul>
+  <p>The extension only operates on <code>www.youtube.com</code> pages.</p>
+
+  <h2>7. Children's Privacy</h2>
+  <p>Focus Cat for YouTube is not directed at children under the age of 13. We do not knowingly collect any information from children.</p>
+
+  <h2>8. Changes to This Policy</h2>
+  <p>We may update this Privacy Policy occasionally. The "Last updated" date at the top of this page will reflect any changes.</p>
+
+  <h2>9. Contact</h2>
+  <p>If you have questions about this Privacy Policy, please contact us at:<br>
+  <a href="mailto:leepeter139@gmail.com">leepeter139@gmail.com</a></p>
+
+  <footer>
+    &copy; 2026 Focus Cat for YouTube. All rights reserved.
+  </footer>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "focus-cat-for-youtube",
+  "version": "0.1.0",
+  "description": "A privacy-first productivity Chrome Extension for intentional YouTube usage",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch",
+    "build:bg": "esbuild src/background/index.ts --bundle --outfile=dist/background.js --target=chrome120 --format=esm",
+    "build:content": "esbuild src/content/index.ts --bundle --outfile=dist/content.js --target=chrome120 --format=iife",
+    "build:popup": "esbuild src/popup/index.ts --bundle --outfile=dist/popup/index.js --target=chrome120 --format=iife",
+    "build:options": "esbuild src/options/index.ts --bundle --outfile=dist/options/index.js --target=chrome120 --format=iife"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.268",
+    "esbuild": "^0.20.2",
+    "typescript": "^5.4.5"
+  }
+}

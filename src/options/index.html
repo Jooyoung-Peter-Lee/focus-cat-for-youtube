@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Focus Cat — Settings</title>
+  <!--
+    options.css is in the same directory as this file.
+    dist/options/index.js is the esbuild bundle — path is relative to this file.
+    Both are served from the extension origin (chrome-extension://), so
+    'self' in the CSP covers both the stylesheet and the script.
+  -->
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+
+  <div class="page">
+
+    <!-- ── Page header ──────────────────────────────────────────────────── -->
+    <header class="page-header">
+      <h1 class="page-title">🐱 Focus Cat Settings</h1>
+      <p class="page-subtitle">Configure your YouTube focus limits and distraction filters.</p>
+    </header>
+
+    <!-- ── Section: Time Limit ──────────────────────────────────────────── -->
+    <section class="section">
+      <h2 class="section-title">Time Limit</h2>
+
+      <div class="field">
+        <label class="field-label" for="daily-limit">
+          Daily YouTube limit (minutes)
+        </label>
+        <input
+          id="daily-limit"
+          class="input-number"
+          type="number"
+          min="0"
+          max="1440"
+          step="1"
+          autocomplete="off"
+        />
+        <p id="daily-limit-error" class="field-error">
+          Enter a whole number from 0 to 1440.
+        </p>
+        <p class="field-hint">
+          Set to <strong>0</strong> to disable the limit entirely.
+          Maximum is 1440&nbsp;minutes&nbsp;(24&nbsp;hours).
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Section: Focus Mode ──────────────────────────────────────────── -->
+    <section class="section">
+      <h2 class="section-title">Focus Mode</h2>
+
+      <div class="field">
+        <div class="radio-group" role="radiogroup" aria-label="Focus mode">
+
+          <label class="radio-option">
+            <input type="radio" name="focus-mode" value="soft" />
+            <span>
+              <span class="radio-label">Soft mode</span>
+              <span class="radio-desc">
+                An overlay appears when your limit is reached.
+                You can dismiss it and continue watching.
+              </span>
+            </span>
+          </label>
+
+          <label class="radio-option" id="hard-mode-option">
+            <input type="radio" name="focus-mode" value="hard" id="hard-mode-radio" />
+            <span>
+              <span class="radio-label">Hard mode <span class="badge-pro">Pro</span></span>
+              <span class="radio-desc">
+                The overlay cannot be dismissed.
+                The video is paused until the next day.
+              </span>
+            </span>
+          </label>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section: Content Filtering ──────────────────────────────────── -->
+    <section class="section">
+      <h2 class="section-title">Content Filtering</h2>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="hide-home" />
+        <div>
+          <label class="checkbox-label" for="hide-home">
+            Hide home page recommendations
+          </label>
+          <span class="checkbox-hint">
+            Removes the video grid on youtube.com/. Search and subscriptions remain.
+          </span>
+        </div>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="hide-right" />
+        <div>
+          <label class="checkbox-label" for="hide-right">
+            Hide right-sidebar recommendations
+          </label>
+          <span class="checkbox-hint">
+            Removes the "Up next" video list shown beside the player.
+          </span>
+        </div>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="block-shorts" />
+        <div>
+          <label class="checkbox-label" for="block-shorts">
+            Block Shorts
+          </label>
+          <span class="checkbox-hint">
+            Hides Shorts shelves on the home page and the Shorts entry in the sidebar.
+          </span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── Section: Focus Cat Pro ───────────────────────────────────────── -->
+    <section class="section">
+      <h2 class="section-title">Focus Cat Pro</h2>
+
+      <!-- Status row -->
+      <div class="pro-status-row">
+        <span id="pro-status-badge" class="pro-status-badge is-free">Free</span>
+        <span id="pro-status-label" class="pro-status-label">Upgrade to unlock all features.</span>
+      </div>
+
+      <!-- Feature list -->
+      <ul class="pro-feature-list">
+        <li class="pro-feature-item">
+          <span class="pro-feature-check">✓</span>
+          <span><strong>Hard mode</strong> — overlay cannot be dismissed until the next day</span>
+        </li>
+        <li class="pro-feature-item">
+          <span class="pro-feature-check">✓</span>
+          <span><strong>+5 min extensions</strong> — grant one time extension per day from the overlay</span>
+        </li>
+        <li class="pro-feature-item pro-feature-soon">
+          <span class="pro-feature-check">✓</span>
+          <span><strong>Multi-device sync</strong> <em>— coming soon</em></span>
+        </li>
+        <li class="pro-feature-item pro-feature-soon">
+          <span class="pro-feature-check">✓</span>
+          <span><strong>Usage history &amp; trends</strong> <em>— coming soon</em></span>
+        </li>
+      </ul>
+
+      <!-- License key activation -->
+      <div id="license-activate-section" class="license-activate-section">
+        <label class="field-label" for="license-key-input">License key</label>
+        <div class="license-input-row">
+          <input
+            id="license-key-input"
+            class="input-text"
+            type="text"
+            placeholder="XXXX-XXXX-XXXX-XXXX"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button id="license-activate-btn" class="license-activate-btn" type="button">
+            Activate
+          </button>
+        </div>
+        <p id="license-key-error" class="field-error">Invalid or already used license key.</p>
+        <p class="field-hint">
+          <a href="https://jwstudio.lemonsqueezy.com/checkout/buy/4f425279-1210-4d13-86dc-0a7a41725a16" target="_blank" rel="noopener noreferrer">Purchase Focus Cat Pro</a> to receive a license key via email.
+        </p>
+      </div>
+
+      <!-- Deactivate row — shown only when Pro is active -->
+      <div id="license-deactivate-section" class="license-deactivate-section" style="display:none">
+        <button id="license-deactivate-btn" class="license-deactivate-btn" type="button">
+          Deactivate license
+        </button>
+        <span class="field-hint">Deactivate to use this key on another device.</span>
+      </div>
+
+    </section>
+
+    <!-- ── Save ──────────────────────────────────────────────────────────── -->
+    <div class="save-row">
+      <button id="save-btn" class="save-btn" type="button">Save settings</button>
+      <span id="save-status" class="save-status" aria-live="polite"></span>
+    </div>
+
+  </div>
+
+  <!-- Bundle path is relative to src/options/index.html → up two levels → dist/ -->
+  <script src="../../dist/options/index.js"></script>
+
+</body>
+</html>

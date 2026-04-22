@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Focus Cat</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <div class="popup">
+
+    <!-- ── Header ─────────────────────────────────────────────────────────── -->
+    <header class="header">
+      <span class="header-cat" aria-hidden="true">🐱</span>
+      <span class="header-brand">Focus Cat</span>
+    </header>
+
+    <!-- ── Main ──────────────────────────────────────────────────────────── -->
+    <main class="main">
+
+      <!-- Shown while reading chrome.storage (first tick) -->
+      <div id="view-loading">
+        <p class="loading-text">Loading…</p>
+      </div>
+
+      <!-- Shown once data is ready -->
+      <div id="view-content" class="hidden">
+
+        <!-- Today's date -->
+        <p id="today-date" class="today-date"></p>
+
+        <!-- Clock display -->
+        <div class="clock-block">
+          <span id="used-time" class="used-time">00:00</span>
+          <span id="limit-label" class="limit-label"></span>
+        </div>
+
+        <!-- Progress bar — hidden when no limit is set -->
+        <div id="bar-wrap" class="bar-wrap">
+          <div class="bar-track">
+            <div id="bar-fill" class="bar-fill"></div>
+          </div>
+          <span id="bar-pct" class="bar-pct">0%</span>
+        </div>
+
+        <!-- Remaining time / status line -->
+        <p id="status-msg" class="status-msg"></p>
+
+      </div>
+    </main>
+
+    <!-- ── Footer ────────────────────────────────────────────────────────── -->
+    <footer class="footer">
+      <button id="settings-btn" class="settings-btn" type="button">
+        ⚙&nbsp;Settings
+      </button>
+    </footer>
+
+  </div>
+
+  <script src="../../dist/popup/index.js"></script>
+
+</body>
+</html>

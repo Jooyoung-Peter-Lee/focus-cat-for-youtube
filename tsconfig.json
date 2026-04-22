@@ -1,0 +1,67 @@
+{
+  "compilerOptions": {
+    // Compile to ES2020 — fully supported by Chrome MV3 service workers
+    // and content scripts. Avoids downleveling async/await to generator
+    // shims, keeping the output clean and debuggable.
+    "target": "ES2020",
+
+    // Include the browser globals (window, document), the Chrome extension
+    // types (chrome.*), and all modern ECMAScript built-ins up to ES2020
+    // (Promise, Map, Set, etc.). "DOM" is needed even for the service worker
+    // because TypeScript uses it for fetch, URL, and other web globals.
+    "lib": ["ES2020", "DOM"],
+
+    // ES modules — matches Chrome's native module support and lets the
+    // bundler (esbuild) tree-shake unused exports.
+    // "module: ESNext" + "moduleResolution: bundler" is the correct pairing
+    // in TypeScript 5.x for projects that use a bundler (esbuild/webpack).
+    // "bundler" enables path-alias and exports-map resolution that "node"
+    // does not support, without requiring explicit .js extensions on imports.
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    // Output directory for compiled JS. Bundler reads from here (or directly
+    // from src/ if using ts-loader / esbuild's TypeScript support).
+    "outDir": "./dist",
+    "rootDir": "./src",
+
+    // Strict mode — non-negotiable per CLAUDE_GUIDE.md.
+    // Enables: strictNullChecks, noImplicitAny, strictFunctionTypes, etc.
+    "strict": true,
+
+    // Catch unreachable code and unused labels at compile time.
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // Emit .d.ts declaration files so shared/ types can be consumed by
+    // the popup and options pages as the project grows.
+    "declaration": true,
+    "declarationMap": true,
+
+    // Source maps for debuggable output in Chrome DevTools.
+    "sourceMap": true,
+
+    // Ensure consistent casing on case-insensitive file systems (Windows).
+    "forceConsistentCasingInFileNames": true,
+
+    // Skip type-checking of .d.ts files in node_modules to keep tsc fast.
+    "skipLibCheck": true,
+
+    // Explicitly list the @types packages TypeScript should include as
+    // global ambient declarations. Without this, "moduleResolution: bundler"
+    // does not automatically inject @types/chrome into every file, so the
+    // `chrome` global remains unknown. Listing it here makes it available
+    // project-wide without needing an import or triple-slash reference in
+    // every source file.
+    "types": ["chrome"],
+
+    // Required for Chrome extension types (@types/chrome uses default exports
+    // in some type definitions).
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

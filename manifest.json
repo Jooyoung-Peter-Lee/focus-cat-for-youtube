@@ -1,0 +1,56 @@
+{
+  "manifest_version": 3,
+  "name": "Focus Cat for YouTube",
+  "version": "0.1.0",
+  "description": "Gently limit your daily YouTube watch time and remove distractions. Your cat is slightly disappointed — but supportive.",
+
+  "icons": {
+    "16":  "assets/icons/icon16.png",
+    "48":  "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+
+  "background": {
+    "service_worker": "dist/background.js",
+    "type": "module"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*"],
+      "js": ["dist/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_icon": {
+      "16":  "assets/icons/icon16.png",
+      "48":  "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    },
+    "default_title": "Focus Cat"
+  },
+
+  "options_ui": {
+    "page": "src/options/index.html",
+    "open_in_tab": true
+  },
+
+  "permissions": [
+    "storage",
+    "alarms",
+    "tabs",
+    "windows"
+  ],
+
+  "host_permissions": [
+    "*://www.youtube.com/*",
+    "https://focus-cat-api.vercel.app/*"
+  ],
+
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src https://focus-cat-api.vercel.app"
+  }
+}
