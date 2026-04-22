@@ -75,6 +75,4 @@ English
 
 ## Privacy Policy URL
 
-https://[YOUR_GITHUB_USERNAME].github.io/focus-cat-for-youtube/store/privacy-policy.html
-
-> Replace [YOUR_GITHUB_USERNAME] once GitHub Pages is live.
+https://jooyoung-peter-lee.github.io/focus-cat-for-youtube/store/privacy-policy.html
