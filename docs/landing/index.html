@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Focus Cat for YouTube — Set Your Limit. Stay Focused.</title>
+  <meta name="description" content="Focus Cat is a Chrome extension that helps you limit your daily YouTube watching time and reduce distractions from recommendations and Shorts. Free to install. Pro upgrade available." />
+  <meta property="og:title" content="Focus Cat for YouTube" />
+  <meta property="og:description" content="A Chrome extension that helps you set a daily YouTube limit, block distracting recommendations, and stay in control." />
+  <meta property="og:type" content="website" />
+  <style>
+    /* ─── Reset & Base ──────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                   'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    code {
+      font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+    }
+
+    /* ─── Design Tokens ─────────────────────────────────────────────────────── */
+    :root {
+      --bg:           #FDFCF9;
+      --bg-alt:       #F5F3EE;
+      --bg-dark:      #1C1917;
+      --text:         #1C1917;
+      --text-muted:   #78716C;
+      --text-light:   #A8A29E;
+      --accent:       #5B5BD6;
+      --accent-dark:  #4747C0;
+      --accent-light: #EEECFB;
+      --pro:          #D97706;
+      --pro-light:    #FFFBEB;
+      --pro-border:   #FDE68A;
+      --green:        #059669;
+      --border:       #E7E3DA;
+      --radius:       12px;
+      --radius-lg:    20px;
+      --radius-xl:    28px;
+      --shadow:       0 2px 12px rgba(0,0,0,0.07);
+      --shadow-md:    0 4px 24px rgba(0,0,0,0.10);
+      --shadow-lg:    0 16px 56px rgba(0,0,0,0.15);
+      --max-w:        1080px;
+    }
+
+    /* ─── Layout Utilities ──────────────────────────────────────────────────── */
+    .container  { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+    .section    { padding: 96px 24px; }
+    .section-alt  { background: var(--bg-alt); }
+    .section-dark { background: var(--bg-dark); color: #FAFAF9; }
+    .text-center  { text-align: center; }
+
+    .section-title {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      margin-bottom: 12px;
+    }
+    .section-subtitle {
+      font-size: 17px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 580px;
+    }
+    .section-dark .section-subtitle { color: #A8A29E; }
+    .text-center .section-subtitle  { margin: 0 auto; }
+    .section-header { margin-bottom: 56px; }
+
+    /* ─── Navigation ────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(253,252,249,0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: var(--max-w); margin: 0 auto; padding: 0 24px;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-size: 16px; font-weight: 700; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-logo .cat-emoji { font-size: 22px; }
+
+    /* ─── Buttons ───────────────────────────────────────────────────────────── */
+    .btn {
+      display: inline-block;
+      border-radius: 10px;
+      padding: 13px 26px;
+      font-size: 15px; font-weight: 600;
+      cursor: pointer; border: none;
+      text-decoration: none; text-align: center;
+      transition: opacity 0.15s, transform 0.12s, background 0.15s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary   { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-dark); }
+    .btn-outline   { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
+    .btn-outline:hover { border-color: var(--text-muted); background: var(--bg-alt); }
+    .btn-pro       { background: var(--pro); color: #fff; }
+    .btn-pro:hover { opacity: 0.88; }
+    .btn-pro-dark  { background: #F59E0B; color: #1C1917; font-weight: 700; }
+    .btn-pro-dark:hover { opacity: 0.88; }
+    .btn-block     { display: block; width: 100%; }
+    .btn-sm        { padding: 10px 20px; font-size: 14px; border-radius: 8px; }
+    .nav-cta       { background: var(--accent); color: #fff; border-radius: 8px; padding: 9px 18px; font-size: 14px; font-weight: 600; }
+    .nav-cta:hover { background: var(--accent-dark); }
+
+    /* ─── Hero ──────────────────────────────────────────────────────────────── */
+    .hero {
+      padding: 80px 24px 96px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 900; line-height: 1.1;
+      letter-spacing: -0.035em;
+      margin-bottom: 20px;
+      max-width: 760px; margin-left: auto; margin-right: auto;
+    }
+    .hero-desc {
+      font-size: 18px; color: var(--text-muted);
+      max-width: 540px; margin: 0 auto 36px; line-height: 1.75;
+    }
+    .hero-actions {
+      display: flex; gap: 12px; justify-content: center;
+      flex-wrap: wrap; margin-bottom: 44px;
+    }
+    .hero-cat {
+      width: 120px; height: 120px;
+      margin: 0 auto 28px;
+    }
+    .trust-bar {
+      display: flex; gap: 20px; justify-content: center;
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      font-size: 13px; color: var(--text-muted); font-weight: 500;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .trust-item::before { content: '✓'; color: var(--green); font-weight: 700; }
+
+    /* ─── Steps ─────────────────────────────────────────────────────────────── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+    }
+    .step-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 32px 28px;
+    }
+    .step-num {
+      width: 40px; height: 40px;
+      background: var(--accent-light); color: var(--accent);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; font-weight: 800;
+      margin-bottom: 20px;
+    }
+    .step-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .step-card p  { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+
+    /* ─── Feature Cards ─────────────────────────────────────────────────────── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 32px;
+      transition: box-shadow 0.2s;
+    }
+    .feature-card:hover { box-shadow: var(--shadow-md); }
+    .feature-icon { font-size: 30px; margin-bottom: 18px; line-height: 1; }
+    .feature-card h3 { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
+    .feature-card p  { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+    .check-list {
+      list-style: none; margin-top: 14px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .check-list li {
+      display: flex; gap: 10px;
+      font-size: 13px; color: var(--text-muted);
+      align-items: flex-start;
+    }
+    .check-list li::before {
+      content: '✓'; color: var(--green); font-weight: 700;
+      flex-shrink: 0; margin-top: 0.1em;
+    }
+
+    /* ─── Mode Comparison ───────────────────────────────────────────────────── */
+    .mode-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    }
+    .mode-card {
+      border-radius: var(--radius-xl); padding: 36px 32px;
+      border: 1.5px solid var(--border);
+    }
+    .mode-card.soft { background: var(--bg); }
+    .mode-card.hard { background: var(--pro-light); border-color: var(--pro-border); }
+    .mode-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 100px; margin-bottom: 20px;
+    }
+    .mode-badge.soft { background: var(--accent-light); color: var(--accent); }
+    .mode-badge.hard { background: #FDE68A; color: #92400E; }
+    .mode-card h3   { font-size: 23px; font-weight: 800; margin-bottom: 12px; }
+    .mode-card > p  { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
+    .mode-list      { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .mode-list li   { display: flex; gap: 10px; font-size: 14px; align-items: flex-start; }
+    .ci-green  { color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .ci-amber  { color: var(--pro);   font-weight: 700; flex-shrink: 0; }
+    .ci-gray   { color: var(--text-light); font-weight: 700; flex-shrink: 0; }
+
+    /* ─── Content Filtering ─────────────────────────────────────────────────── */
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .filter-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px;
+      display: flex; gap: 20px; align-items: flex-start;
+    }
+    .filter-icon { font-size: 26px; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+    .filter-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .filter-card p  { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ─── Pricing ───────────────────────────────────────────────────────────── */
+    .pricing-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+      max-width: 780px; margin: 0 auto;
+    }
+    .pricing-card {
+      background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: var(--radius-xl); padding: 36px 32px;
+    }
+    .pricing-card.featured {
+      background: var(--bg-dark); border-color: transparent;
+      box-shadow: var(--shadow-lg);
+    }
+    .pricing-tier {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 20px;
+    }
+    .pricing-card.featured .pricing-tier { color: #78716C; }
+    .pricing-price {
+      font-size: 44px; font-weight: 900;
+      letter-spacing: -0.04em; line-height: 1;
+      color: var(--text); margin-bottom: 4px;
+    }
+    .pricing-card.featured .pricing-price { color: #FAFAF9; }
+    .pricing-price sup { font-size: 22px; vertical-align: super; font-weight: 700; }
+    .pricing-period { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+    .pricing-card.featured .pricing-period { color: #78716C; }
+    .pricing-divider {
+      border: none; border-top: 1px solid var(--border); margin: 20px 0;
+    }
+    .pricing-card.featured .pricing-divider { border-color: #3C3836; }
+    .pricing-items {
+      list-style: none; display: flex; flex-direction: column;
+      gap: 11px; margin-bottom: 28px;
+    }
+    .pi { display: flex; gap: 9px; font-size: 14px; align-items: flex-start; }
+    .pi .ico { flex-shrink: 0; }
+    .pricing-card.featured .pi { color: #E7E5E4; }
+    .pricing-note {
+      font-size: 12px; color: var(--text-light);
+      margin-top: 12px; text-align: center;
+    }
+    .pricing-card.featured .pricing-note { color: #57534E; }
+
+    /* ─── Activation Steps ──────────────────────────────────────────────────── */
+    .activation-wrap { max-width: 620px; margin: 0 auto; }
+    .act-step {
+      display: flex; gap: 20px; padding-bottom: 32px; position: relative;
+    }
+    .act-step:not(:last-child)::before {
+      content: ''; position: absolute;
+      left: 17px; top: 38px; bottom: 0;
+      width: 2px; background: var(--border);
+    }
+    .act-dot {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: var(--accent-light); color: var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800;
+      position: relative; z-index: 1;
+    }
+    .act-body { padding-top: 6px; }
+    .act-body h3 { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+    .act-body p  { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+
+    /* ─── Privacy Grid ──────────────────────────────────────────────────────── */
+    .privacy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 32px; margin-top: 56px;
+    }
+    .privacy-item { text-align: center; }
+    .privacy-item .pi-icon { font-size: 34px; margin-bottom: 14px; }
+    .privacy-item h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: #F5F5F4; }
+    .privacy-item p  { font-size: 13px; color: #A8A29E; line-height: 1.65; }
+
+    /* ─── FAQ ───────────────────────────────────────────────────────────────── */
+    .faq-list { max-width: 700px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      width: 100%; background: none; border: none; text-align: left;
+      padding: 20px 0; font-size: 15px; font-weight: 600;
+      color: var(--text); cursor: pointer; font-family: inherit;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    .faq-q::after {
+      content: '+'; font-size: 22px; font-weight: 300;
+      color: var(--text-muted); flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+    .faq-item.open .faq-q::after { transform: rotate(45deg); }
+    .faq-a {
+      display: none; font-size: 14px; color: var(--text-muted);
+      line-height: 1.75; padding-bottom: 20px;
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ─── Contact ───────────────────────────────────────────────────────────── */
+    .contact-box { max-width: 520px; margin: 0 auto; text-align: center; }
+    .contact-box p { font-size: 16px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.7; }
+    .contact-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: var(--radius); padding: 14px 24px;
+      font-size: 15px; font-weight: 600; color: var(--text);
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .contact-link:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ─── Legal ─────────────────────────────────────────────────────────────── */
+    .legal-wrap {
+      background: var(--bg-alt);
+      padding: 72px 24px;
+      border-top: 1px solid var(--border);
+    }
+    .legal-wrap + .legal-wrap { border-top: 1px solid var(--border); }
+    .legal-inner { max-width: 720px; margin: 0 auto; }
+    .legal-inner h2 { font-size: 26px; font-weight: 800; margin-bottom: 4px; }
+    .legal-date { font-size: 12px; color: var(--text-light); margin-bottom: 36px; }
+    .legal-inner h3 { font-size: 15px; font-weight: 700; margin: 28px 0 8px; }
+    .legal-inner p, .legal-inner li {
+      font-size: 13px; color: var(--text-muted); line-height: 1.8;
+    }
+    .legal-inner ul { padding-left: 20px; margin: 8px 0 16px; }
+    .legal-inner a  { color: var(--accent); text-decoration: underline; }
+
+    /* ─── Footer ────────────────────────────────────────────────────────────── */
+    footer {
+      background: var(--bg-dark); color: #57534E;
+      padding: 40px 24px; text-align: center;
+    }
+    .footer-logo { font-size: 15px; font-weight: 700; color: #D6D3D1; margin-bottom: 16px; }
+    .footer-links {
+      display: flex; gap: 20px; justify-content: center;
+      flex-wrap: wrap; margin-bottom: 20px;
+    }
+    .footer-links a { font-size: 13px; color: #78716C; transition: color 0.15s; }
+    .footer-links a:hover { color: #D6D3D1; }
+    .footer-copy { font-size: 12px; color: #44403C; }
+
+    /* ─── Responsive ────────────────────────────────────────────────────────── */
+    @media (max-width: 720px) {
+      .mode-grid    { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .section { padding: 64px 20px; }
+      .hero { padding: 56px 20px 72px; }
+    }
+    @media (max-width: 480px) {
+      .nav-inner  { padding: 0 16px; }
+      .container  { padding: 0 16px; }
+      .mode-card  { padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- Navigation                                                                -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <span class="cat-emoji">🐱</span>
+      Focus Cat for YouTube
+    </div>
+    <a href="https://jwstudio.lemonsqueezy.com/checkout/buy/4f425279-1210-4d13-86dc-0a7a41725a16"
+       class="nav-cta" target="_blank" rel="noopener noreferrer">
+      Get Pro — $4.99
+    </a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- Hero                                                                      -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="hero">
+
+  <!-- Animated cat SVG (same asset used in the extension overlay) -->
+  <div class="hero-cat" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+         overflow="hidden" style="display:block;width:100%;height:100%">
+      <title>Focus Cat</title>
+      <defs><style>
+        #hsvg .s  { fill:none;stroke:#1f1a17;stroke-width:22;stroke-linecap:round;stroke-linejoin:round; }
+        #hsvg .fd { fill:#1f1a17; }
+        #hsvg .fp { fill:#f6a6a8; }
+        #hsvg .sh { fill:#efe4d2;opacity:.65; }
+        #hsvg .fs { fill:#f4c64f; }
+        #h-el, #h-er { transform-box:fill-box;transform-origin:center;
+          animation:h-blink 4s ease-in-out infinite; }
+        #h-er { animation-delay:.06s; }
+        @keyframes h-blink {
+          0%,91%,96%,100% { transform:scaleY(1);   }
+          93.5%           { transform:scaleY(0.08); }
+        }
+        #h-ear-r { transform-box:fill-box;transform-origin:center bottom;
+          animation:h-ear 5s ease-in-out infinite;animation-delay:1.2s; }
+        @keyframes h-ear {
+          0%,84%,96%,100% { transform:rotate(0deg); }
+          88% { transform:rotate(-10deg); }
+          91% { transform:rotate(5deg); }
+          94% { transform:rotate(-2deg); }
+        }
+        #h-star { transform-box:fill-box;transform-origin:center;
+          animation:h-pulse 2.4s ease-in-out infinite; }
+        @keyframes h-pulse {
+          0%,100% { transform:scale(1);    opacity:1;   }
+          50%     { transform:scale(1.35); opacity:0.8; }
+        }
+        #h-head { transform-box:fill-box;transform-origin:center;
+          animation:h-tilt 10s ease-in-out infinite;animation-delay:2s; }
+        @keyframes h-tilt {
+          0%,60%   { transform:rotate(0deg);  }
+          65%      { transform:rotate(-2deg); }
+          70%      { transform:rotate(0deg);  }
+          77%      { transform:rotate(-3deg); }
+          80%      { transform:rotate(5deg);  }
+          87%,100% { transform:rotate(0deg);  }
+        }
+      </style></defs>
+      <g id="hsvg">
+      <g id="h-head">
+        <ellipse class="sh" cx="256" cy="410" rx="160" ry="44"/>
+        <path class="s" d="M 140 214 C 110 250,104 294,118 335 C 136 388,188 414,256 414
+                            C 324 414,376 388,394 335 C 408 294,402 250,372 214
+                            C 350 188,316 172,256 172 C 196 172,162 188,140 214 Z"/>
+        <g id="h-ear-l">
+          <path class="s" d="M 170 206 L 190 138 L 234 184"/>
+          <path class="fp" d="M 189 160 L 202 146 L 220 170 L 203 181 Z" opacity=".9"/>
+        </g>
+        <g id="h-ear-r">
+          <path class="s" d="M 342 206 L 322 138 L 278 184"/>
+          <path class="fp" d="M 323 160 L 310 146 L 292 170 L 309 181 Z" opacity=".9"/>
+        </g>
+        <circle id="h-el" class="fd" cx="206" cy="266" r="20"/>
+        <circle id="h-er" class="fd" cx="306" cy="266" r="20"/>
+        <path class="s" d="M 240 310 C 247 320,256 320,263 310"/>
+        <path class="s" d="M 263 310 C 270 320,279 320,286 310"/>
+        <path class="fp" d="M 166 298 C 182 285,206 287,216 304 C 205 322,182 326,166 313 Z" opacity=".55"/>
+        <path class="fp" d="M 346 298 C 330 285,306 287,296 304 C 307 322,330 326,346 313 Z" opacity=".55"/>
+        <path class="s" d="M 116 276 L 156 286"/>
+        <path class="s" d="M 114 308 L 156 306"/>
+        <path class="s" d="M 396 276 L 356 286"/>
+        <path class="s" d="M 398 308 L 356 306"/>
+        <path id="h-star" class="fs"
+              d="M 406 164 C 416 164,424 172,424 182 C 424 172,432 164,442 164
+                 C 432 164,424 156,424 146 C 424 156,416 164,406 164 Z"/>
+      </g>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-eyebrow">Chrome Extension · Manifest V3</div>
+
+  <h1>Take back your<br>YouTube time.</h1>
+
+  <p class="hero-desc">
+    Focus Cat helps you set a daily YouTube watching limit, block distracting
+    recommendations, and stay in control — without giving up YouTube entirely.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#" class="btn btn-outline">Add to Chrome — Free</a>
+    <a href="https://jwstudio.lemonsqueezy.com/checkout/buy/4f425279-1210-4d13-86dc-0a7a41725a16"
+       class="btn btn-pro" target="_blank" rel="noopener noreferrer">
+      Get Pro — $4.99
+    </a>
+  </div>
+
+  <div class="trust-bar">
+    <span class="trust-item">No account required</span>
+    <span class="trust-item">Data stays on your device</span>
+    <span class="trust-item">One-time payment for Pro</span>
+    <span class="trust-item">Chrome MV3</span>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- How It Works                                                              -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header text-center">
+      <h2 class="section-title">How it works</h2>
+      <p class="section-subtitle">
+        No sign-up. No account. Three steps and you're in control.
+      </p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Set your daily limit</h3>
+        <p>Open the Focus Cat settings page and enter how many minutes of YouTube you want per day. The default is 60 minutes. Set it to 0 to disable the limit entirely.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Watch YouTube normally</h3>
+        <p>Focus Cat tracks your watch time silently in the background using Chrome's extension APIs. Nothing is recorded or sent to any server. Your data stays on your device.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Focus Cat steps in</h3>
+        <p>At 90% of your limit, a brief warning banner appears. When the limit is reached, an overlay covers the player. You choose how strict it is — Soft or Hard mode.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- Core Features                                                             -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header text-center">
+      <h2 class="section-title">Everything you need to focus</h2>
+      <p class="section-subtitle">
+        A small, well-built tool. No subscription. No tracking. Just the features that matter.
+      </p>
+    </div>
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon">⏱️</div>
+        <h3>Daily time limit</h3>
+        <p>Set a daily YouTube watching limit in minutes. Focus Cat uses timestamp delta tracking — your count stays accurate even when your browser or laptop restarts.</p>
+        <ul class="check-list">
+          <li>Any limit from 1 to 1,440 minutes (24 hours)</li>
+          <li>Set to 0 to disable the limit</li>
+          <li>Resets at midnight, your local time</li>
+          <li>90% warning banner before the limit is reached</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🐱</div>
+        <h3>Blocking overlay</h3>
+        <p>When your limit is reached, a friendly overlay with an animated cat appears directly over the YouTube video player. It shows how much you watched and your daily limit.</p>
+        <ul class="check-list">
+          <li>Covers the video player, not the whole page</li>
+          <li>Shows today's total watch time</li>
+          <li>Two modes: dismissible (Soft) or locked (Hard)</li>
+          <li>Encouraging message — not a punishment</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🧹</div>
+        <h3>Content filtering</h3>
+        <p>Reduce temptation before you even reach your limit. Hide the parts of YouTube that pull you into watching when you didn't plan to.</p>
+        <ul class="check-list">
+          <li>Hide home page recommendation grid</li>
+          <li>Hide right-sidebar "Up next" list</li>
+          <li>Block Shorts from home and sidebar</li>
+          <li>Search and Subscriptions remain fully usable</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- Soft Mode vs Hard Mode                                                    -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="section section-alt" id="modes">
+  <div class="container">
+    <div class="section-header text-center">
+      <h2 class="section-title">Soft mode vs Hard mode</h2>
+      <p class="section-subtitle">
+        Choose the level of commitment that fits your goal.
+      </p>
+    </div>
+    <div class="mode-grid">
+
+      <!-- Soft -->
+      <div class="mode-card soft">
+        <div class="mode-badge soft">Free</div>
+        <h3>Soft mode</h3>
+        <p>
+          The overlay appears when your limit is reached, but you keep the final decision.
+          Useful when you want awareness without strict enforcement.
+        </p>
+        <ul class="mode-list">
+          <li><span class="ci-green">✓</span> Overlay appears when limit is reached</li>
+          <li><span class="ci-green">✓</span> "Dismiss for now" button available</li>
+          <li><span class="ci-green">✓</span> You can continue watching if you choose</li>
+          <li><span class="ci-green">✓</span> Upgrade prompt for "+5 min" (Pro feature)</li>
+          <li><span class="ci-gray">—</span> No hard lock enforcement</li>
+        </ul>
+      </div>
+
+      <!-- Hard -->
+      <div class="mode-card hard">
+        <div class="mode-badge hard">Pro only</div>
+        <h3>Hard mode</h3>
+        <p>
+          The overlay cannot be dismissed. The video pauses immediately.
+          YouTube is blocked until midnight. For users who want a commitment they can trust.
+        </p>
+        <ul class="mode-list">
+          <li><span class="ci-amber">✓</span> Overlay appears when limit is reached</li>
+          <li><span class="ci-amber">✓</span> Video is paused immediately</li>
+          <li><span class="ci-amber">✓</span> No dismiss button — locked until midnight</li>
+          <li><span class="ci-amber">✓</span> Keyboard shortcuts blocked on the overlay</li>
+          <li><span class="ci-amber">✓</span> Requires an active Pro license</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- Content Filtering                                                         -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header text-center">
+      <h2 class="section-title">Block distractions before they start</h2>
+      <p class="section-subtitle">
+        You don't have to wait until the limit hits. Hide the surfaces that pull you into watching more than you planned.
+      </p>
+    </div>
+    <div class="filter-grid">
+
+      <div class="filter-card">
+        <div class="filter-icon">🏠</div>
+        <div>
+          <h3>Home recommendations</h3>
+          <p>
+            Removes the recommended video grid from the YouTube home page.
+            Search, Subscriptions, and Library still work normally.
+          </p>
+        </div>
+      </div>
+
+      <div class="filter-card">
+        <div class="filter-icon">▶️</div>
+        <div>
+          <h3>Right-sidebar "Up next"</h3>
+          <p>
+            Hides the "Up next" and recommended videos panel shown beside the
+            video player — a primary driver of unplanned watching sessions.
+          </p>
+        </div>
+      </div>
+
+      <div class="filter-card">
+        <div class="filter-icon">📱</div>
+        <div>
+          <h3>Shorts blocking</h3>
+          <p>
+            Hides Shorts shelves on the home page and removes the Shorts link
+            from the sidebar navigation.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- Pricing                                                                   -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="section section-alt" id="pricing">
+  <div class="container">
+    <div class="section-header text-center">
+      <h2 class="section-title">Simple, one-time pricing</h2>
+      <p class="section-subtitle">
+        No subscription. No renewal. Pay once and own it.
+      </p>
+    </div>
+    <div class="pricing-grid">
+
+      <!-- Free -->
+      <div class="pricing-card">
+        <div class="pricing-tier">Free</div>
+        <div class="pricing-price">$0</div>
+        <div class="pricing-period">Forever free · no credit card</div>
+        <hr class="pricing-divider" />
+        <ul class="pricing-items">
+          <li class="pi"><span class="ico" style="color:var(--green)">✓</span> Daily time limit</li>
+          <li class="pi"><span class="ico" style="color:var(--green)">✓</span> 90% warning banner</li>
+          <li class="pi"><span class="ico" style="color:var(--green)">✓</span> Soft mode blocking overlay</li>
+          <li class="pi"><span class="ico" style="color:var(--green)">✓</span> Hide home recommendations</li>
+          <li class="pi"><span class="ico" style="color:var(--green)">✓</span> Hide sidebar recommendations</li>
+          <li class="pi"><span class="ico" style="color:var(--green)">✓</span> Block Shorts</li>
+        </ul>
+        <a href="#" class="btn btn-outline btn-block">Add to Chrome</a>
+      </div>
+
+      <!-- Pro -->
+      <div class="pricing-card featured">
+        <div class="pricing-tier">Pro</div>
+        <div class="pricing-price" style="color:#FAFAF9">
+          <sup>$</sup>4<span style="font-size:22px;font-weight:700">.99</span>
+        </div>
+        <div class="pricing-period">One-time · no subscription · no renewal</div>
+        <hr class="pricing-divider" />
+        <ul class="pricing-items">
+          <li class="pi" style="color:#A8A29E;font-size:13px;">Everything in Free, plus:</li>
+          <li class="pi"><span class="ico" style="color:#F59E0B">✓</span> Hard mode — locked until midnight</li>
+          <li class="pi"><span class="ico" style="color:#F59E0B">✓</span> +5 min daily extension from overlay</li>
+          <li class="pi"><span class="ico" style="color:#57534E">○</span> Multi-device sync <em style="font-size:12px">(coming soon)</em></li>
+          <li class="pi"><span class="ico" style="color:#57534E">○</span> Usage history &amp; trends <em style="font-size:12px">(coming soon)</em></li>
+        </ul>
+        <a href="https://jwstudio.lemonsqueezy.com/checkout/buy/4f425279-1210-4d13-86dc-0a7a41725a16"
+           class="btn btn-pro-dark btn-block" target="_blank" rel="noopener noreferrer">
+          Get Pro — $4.99
+        </a>
+        <p class="pricing-note">License key delivered by email · 14-day refund guarantee</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- License Activation                                                        -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="activation">
+  <div class="container">
+    <div class="section-header text-center">
+      <h2 class="section-title">How license activation works</h2>
+      <p class="section-subtitle">
+        No account needed. Your license key is all you need to unlock Pro.
+      </p>
+    </div>
+    <div class="activation-wrap">
+
+      <div class="act-step">
+        <div class="act-dot">1</div>
+        <div class="act-body">
+          <h3>Purchase Focus Cat Pro</h3>
+          <p>
+            Complete the checkout via Lemon Squeezy. Payment is processed securely
+            through their platform. Focus Cat Pro is a one-time purchase — there are
+            no recurring charges.
+          </p>
+        </div>
+      </div>
+
+      <div class="act-step">
+        <div class="act-dot">2</div>
+        <div class="act-body">
+          <h3>Receive your license key by email</h3>
+          <p>
+            Immediately after payment, Lemon Squeezy sends your unique license key
+            to your email address. It looks like:
+            <code style="font-size:13px;background:var(--bg-alt);padding:2px 8px;border-radius:5px;">XXXX-XXXX-XXXX-XXXX</code>
+          </p>
+        </div>
+      </div>
+
+      <div class="act-step">
+        <div class="act-dot">3</div>
+        <div class="act-body">
+          <h3>Enter the key in the settings page</h3>
+          <p>
+            Click the Focus Cat icon in your Chrome toolbar and open Settings.
+            Paste your license key into the license field and click
+            <strong>Activate</strong>. The key is verified against Lemon Squeezy's servers.
+          </p>
+        </div>
+      </div>
+
+      <div class="act-step">
+        <div class="act-dot">4</div>
+        <div class="act-body">
+          <h3>Pro features activate immediately</h3>
+          <p>
+            Hard mode and the +5 min daily extension become available right away.
+            To move your license to another device, click <strong>Deactivate</strong>
+            on the old device first, then activate on the new one.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- Privacy                                                                   -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="section section-dark">
+  <div class="container">
+    <div class="section-header text-center">
+      <h2 class="section-title" style="color:#FAFAF9">Your data stays with you</h2>
+      <p class="section-subtitle">
+        Focus Cat does not collect, upload, or sell your data.
+        Everything runs locally inside your browser.
+      </p>
+    </div>
+    <div class="privacy-grid">
+      <div class="privacy-item">
+        <div class="pi-icon">🔒</div>
+        <h3>No account required</h3>
+        <p>No email, no sign-up, no profile. The extension works without any authentication.</p>
+      </div>
+      <div class="privacy-item">
+        <div class="pi-icon">💾</div>
+        <h3>Local storage only</h3>
+        <p>Your watch time and settings are stored in Chrome's local extension storage and never leave your device.</p>
+      </div>
+      <div class="privacy-item">
+        <div class="pi-icon">🚫</div>
+        <h3>No tracking or analytics</h3>
+        <p>Focus Cat contains no analytics SDKs, no telemetry, and no usage reporting of any kind.</p>
+      </div>
+      <div class="privacy-item">
+        <div class="pi-icon">🔑</div>
+        <h3>License check only</h3>
+        <p>When you activate a Pro key, the key alone is sent to a verification endpoint. Nothing else is transmitted.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- FAQ                                                                       -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="section section-alt" id="faq">
+  <div class="container">
+    <div class="section-header text-center">
+      <h2 class="section-title">Frequently asked questions</h2>
+    </div>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q">What is Focus Cat for YouTube?</button>
+        <div class="faq-a">Focus Cat for YouTube is a Chrome browser extension that helps you limit how much time you spend watching YouTube each day. You set a daily limit in minutes. When you reach it, Focus Cat shows a blocking overlay over the video player. You can also hide distracting recommendation surfaces like home page recommendations, the sidebar, and Shorts.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Is it really free?</button>
+        <div class="faq-a">Yes. The core features — daily time limit, Soft mode blocking overlay, 90% warning banner, and all content filtering options — are completely free. The Pro tier ($4.99 one-time) adds Hard mode (undismissable overlay) and the +5 min daily extension from the overlay.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">What is the difference between Soft mode and Hard mode?</button>
+        <div class="faq-a">In Soft mode, the overlay appears when your limit is reached, but you can dismiss it with the "Dismiss for now" button and continue watching. In Hard mode (Pro only), the overlay cannot be dismissed, the video pauses immediately, and YouTube remains blocked until midnight based on your local device time.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">When does my daily watch time reset?</button>
+        <div class="faq-a">Your daily watch time resets at midnight, based on your local device date. The reset happens automatically — you don't need to do anything. Your settings and limit carry over every day until you change them.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Does Focus Cat work on YouTube Music, YouTube Studio, or other subdomains?</button>
+        <div class="faq-a">No. Focus Cat only applies to www.youtube.com. YouTube Music (music.youtube.com), YouTube Studio (studio.youtube.com), and other YouTube subdomains are not affected by any Focus Cat features.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Can I use my Pro license key on multiple devices?</button>
+        <div class="faq-a">One license key supports one active device at a time. To switch to a new device, open Focus Cat Settings on your current device and click Deactivate, then activate the key on the new device. There is no limit to how many times you can transfer your license.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Does Focus Cat send any data to a server?</button>
+        <div class="faq-a">Only when you activate or deactivate a Pro license key. The key is sent to a verification endpoint to confirm its validity. Your watch time, settings, and browsing activity are never sent anywhere — they are stored locally in Chrome's extension storage and do not leave your device.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Can I get a refund?</button>
+        <div class="faq-a">Yes. We offer a full refund within 14 days of purchase, no questions asked. Email leepeter139@gmail.com with your order information. Refunds are processed through Lemon Squeezy and may take a few business days to appear.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Which browsers does Focus Cat support?</button>
+        <div class="faq-a">Focus Cat supports Google Chrome on desktop (Windows, Mac, Linux). It is built on Chrome Extension Manifest V3. It is not available for Firefox, Safari, Edge, or mobile browsers at this time.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Is Focus Cat affiliated with YouTube or Google?</button>
+        <div class="faq-a">No. Focus Cat for YouTube is an independent third-party Chrome extension. It is not affiliated with, endorsed by, or connected to YouTube LLC or Google LLC in any way. "YouTube" is used solely to describe the website the extension operates on.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- Contact                                                                   -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="contact-box">
+      <h2 class="section-title" style="margin-bottom:16px;">Get in touch</h2>
+      <p>
+        Have a question, found a bug, or need help with your license key?
+        Send an email and I'll reply as soon as I can — typically within
+        1–2 business days.
+      </p>
+      <a href="mailto:leepeter139@gmail.com" class="contact-link">
+        ✉ leepeter139@gmail.com
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- Privacy Policy                                                            -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="legal-wrap" id="privacy">
+  <div class="legal-inner">
+    <h2>Privacy Policy</h2>
+    <p class="legal-date">Effective: April 24, 2026 &nbsp;·&nbsp; Last updated: April 24, 2026</p>
+
+    <h3>1. Overview</h3>
+    <p>Focus Cat for YouTube ("Focus Cat", "the extension", "we", "us") is a Chrome browser extension developed and operated as an independent project. This Privacy Policy explains what information is involved when you use Focus Cat and what your rights are.</p>
+
+    <h3>2. Information stored locally on your device</h3>
+    <p>The following data is stored using Chrome's <code>chrome.storage.local</code> API. It lives only on your device and is not accessible to us:</p>
+    <ul>
+      <li>Your daily YouTube watch time (stored as milliseconds)</li>
+      <li>Your settings: daily limit, focus mode, content filtering preferences</li>
+      <li>Your Pro license status: active or inactive</li>
+    </ul>
+
+    <h3>3. Information transmitted to our servers</h3>
+    <p>When you activate or deactivate a Pro license key, the license key string is sent to our license verification endpoint (hosted on Vercel) to confirm its validity with Lemon Squeezy. No other data is transmitted. We do not log your IP address, device information, browsing history, or YouTube usage.</p>
+
+    <h3>4. Information we do not collect</h3>
+    <p>We do not collect:</p>
+    <ul>
+      <li>YouTube watch history or video titles</li>
+      <li>Browsing history of any kind</li>
+      <li>Personal identity information</li>
+      <li>Analytics, telemetry, or usage data</li>
+    </ul>
+
+    <h3>5. Third-party payment processor</h3>
+    <p>Focus Cat Pro is sold through Lemon Squeezy, a Merchant of Record. When you purchase, Lemon Squeezy collects and processes your payment details and email address under their own privacy policy. We receive a license key and a purchase confirmation for fulfillment purposes only.</p>
+
+    <h3>6. Data retention</h3>
+    <p>All locally stored data is retained until you uninstall Focus Cat or manually clear the extension's storage via Chrome settings. License activation status is retained until you deactivate the key.</p>
+
+    <h3>7. Children's privacy</h3>
+    <p>Focus Cat is not directed at children under the age of 13. We do not knowingly collect any personal information from children.</p>
+
+    <h3>8. Changes to this policy</h3>
+    <p>We may update this Privacy Policy. When we do, the effective date above will be updated. Continued use of the extension constitutes acceptance of the updated policy.</p>
+
+    <h3>9. Contact</h3>
+    <p>Privacy questions: <a href="mailto:leepeter139@gmail.com">leepeter139@gmail.com</a></p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- Terms of Service                                                          -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="legal-wrap" id="terms">
+  <div class="legal-inner">
+    <h2>Terms of Service</h2>
+    <p class="legal-date">Effective: April 24, 2026 &nbsp;·&nbsp; Last updated: April 24, 2026</p>
+
+    <h3>1. Acceptance</h3>
+    <p>By installing or using Focus Cat for YouTube, you agree to these Terms of Service. If you do not agree, please do not install or use the extension.</p>
+
+    <h3>2. What Focus Cat is</h3>
+    <p>Focus Cat for YouTube is a Chrome browser extension that helps users voluntarily set a daily limit on YouTube watching time and reduce distractions. It is a personal productivity tool. It is not a parental control system, a financial product, a medical device, an adult content filter, a gambling product, or any other regulated service.</p>
+
+    <h3>3. License and permitted use</h3>
+    <p>Focus Cat is licensed to you for personal, non-commercial use. You may install and use the extension on devices you own or control. You may not redistribute, sublicense, reverse-engineer, decompile, or resell the extension or any part of it without prior written permission.</p>
+
+    <h3>4. Pro license key</h3>
+    <p>Each Pro license key may be activated on one device at a time. You may transfer it between your own devices by deactivating it first. Sharing license keys with other individuals is not permitted. We reserve the right to deactivate keys that are shared or misused.</p>
+
+    <h3>5. Refund policy</h3>
+    <p>We offer a full refund within 14 days of purchase, no questions asked. To request a refund, contact us at <a href="mailto:leepeter139@gmail.com">leepeter139@gmail.com</a> with your order number or email address used at checkout. Refunds are processed through Lemon Squeezy and may take a few business days to appear on your statement.</p>
+
+    <h3>6. Disclaimer of warranties</h3>
+    <p>Focus Cat is provided "as is" and "as available." We make no warranties, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, or non-infringement. We do not warrant that the extension will meet your specific expectations, operate without interruption, or that it will successfully limit your YouTube usage. Results depend entirely on your own choices and actions.</p>
+
+    <h3>7. Limitation of liability</h3>
+    <p>To the maximum extent permitted by applicable law, the developer of Focus Cat shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of or inability to use the extension, even if advised of the possibility of such damages.</p>
+
+    <h3>8. Third-party services</h3>
+    <p>Focus Cat operates on the YouTube website (owned by Google LLC) as a browser extension. License key processing is handled by Lemon Squeezy. We are not affiliated with, endorsed by, or sponsored by YouTube, Google LLC, or Lemon Squeezy. These services are governed by their own terms and policies.</p>
+
+    <h3>9. Modifications to the extension</h3>
+    <p>We may update Focus Cat at any time to add features, fix bugs, or address compatibility issues. We will not remove paid Pro features without notice or reasonable compensation to affected Pro users.</p>
+
+    <h3>10. Governing law</h3>
+    <p>These Terms are governed by applicable law. Any disputes shall first be addressed through good-faith communication. If a dispute cannot be resolved informally, it shall be subject to the jurisdiction of the developer's place of residence.</p>
+
+    <h3>11. Changes to these terms</h3>
+    <p>We may revise these Terms of Service. Changes will be reflected on this page with an updated effective date. Continued use of the extension after changes constitutes your acceptance of the updated terms.</p>
+
+    <h3>12. Contact</h3>
+    <p>Questions about these terms: <a href="mailto:leepeter139@gmail.com">leepeter139@gmail.com</a></p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- Footer                                                                    -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-logo">🐱 Focus Cat for YouTube</div>
+  <div class="footer-links">
+    <a href="#modes">Focus Modes</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#activation">License</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+    <a href="#privacy">Privacy Policy</a>
+    <a href="#terms">Terms of Service</a>
+  </div>
+  <p class="footer-copy">
+    © 2026 Focus Cat for YouTube. All rights reserved.
+    Not affiliated with YouTube or Google.
+  </p>
+</footer>
+
+<script>
+  // FAQ accordion — minimal vanilla JS
+  document.querySelectorAll('.faq-q').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item  = btn.closest('.faq-item');
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(i) {
+        i.classList.remove('open');
+      });
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+</body>
+</html>

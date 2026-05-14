@@ -77,7 +77,7 @@ background → content: `LIMIT_STATE_UPDATE`
 
 ---
 
-## Phase 진행 상황 (2026-04-20 기준)
+## Phase 진행 상황 (2026-04-24 기준)
 
 ### Phase 1 — MVP ✅ 완료
 ### Phase 2 — UX Polish ✅ 완료
@@ -93,10 +93,19 @@ background → content: `LIMIT_STATE_UPDATE`
 ✅ Vercel 배포 + 환경변수 설정 (LEMON_SQUEEZY_API_KEY, LEMON_SQUEEZY_STORE_ID)
 ✅ Lemon Squeezy 상품 생성 ($4.99 one-time, license key 발급 설정 완료)
 ✅ 구매 링크 options 페이지에 추가 (src/options/index.html)
+✅ Chrome Web Store 스크린샷 5장 촬영 완료 (2026-04-24)
+   - shot1-clean-youtube.png
+   - shot2-warning-banner.png
+   - shot3-overlay-soft.png
+   - shot4-overlay-hard.png
+   - shot5-options-page.png
 
-⬜ Lemon Squeezy 스토어 활성화 (PayPal 계좌 인증 대기 중)
+⬜ Lemon Squeezy 세금 정보 제출 (W-9, 미국 그린카드 보유자) 🔴 블로커
+   - 스토어 미활성화 원인: 세금 정보 미제출 (PayPal 아님)
+   - 한국 거주 + 미국 영주권 → W-9 양식 + SSN 필요
+⬜ Lemon Squeezy 스토어 활성화
 ⬜ End-to-end 테스트 (실제 키 구매 → 입력 → Pro 활성화 확인)
-⬜ Chrome Web Store 출품 준비 (스크린샷, 설명, 개인정보처리방침)
+⬜ Chrome Developer 계정 등록 ($5 one-time)
 ⬜ Store 제출 & 심사
 
 ### Phase 4, 5 — 미착수
@@ -105,6 +114,7 @@ background → content: `LIMIT_STATE_UPDATE`
 
 ## 다음 세션 시작점
 
-1. **Lemon Squeezy 스토어 활성화** — PayPal 계좌 인증 완료 후 스토어 활성화
-2. **End-to-end 테스트** — 실제 키 구매 → options 페이지 입력 → Pro 활성화 확인
-3. **Chrome Web Store 출품 준비** — 스크린샷, 설명, 개인정보처리방침
+1. **Lemon Squeezy W-9 제출** — 세금 정보 제출 후 스토어 활성화
+2. **Chrome Developer 계정 등록** — $5 one-time
+3. **End-to-end 테스트** — 실제 키 구매 → options 페이지 입력 → Pro 활성화 확인
+4. **Store 제출** — 스크린샷 5장 준비 완료, 설명문 준비 완료
