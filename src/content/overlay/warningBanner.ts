@@ -188,14 +188,25 @@ function buildBanner(options: BannerOptions): HTMLDivElement {
     'min-width: 0',
   ]);
 
-  const catIcon = document.createElement('span');
+  const catIcon = document.createElement('img');
   catIcon.setAttribute('aria-hidden', 'true');
+  catIcon.src = chrome.runtime.getURL('assets/cat/cutycat.png');
+  catIcon.alt = '';
   catIcon.style.cssText = joinStyles([
-    'font-size: 16px',
-    'line-height: 1',
+    'width: 28px',
+    'height: 28px',
+    'object-fit: contain',
     'flex-shrink: 0',
+    'display: block',
   ]);
-  catIcon.textContent = '🐱';
+  catIcon.animate(
+    [
+      { transform: 'translateY(0px) rotate(0deg)' },
+      { transform: 'translateY(-4px) rotate(-3deg)' },
+      { transform: 'translateY(0px) rotate(0deg)' },
+    ],
+    { duration: 2000, iterations: Infinity, easing: 'ease-in-out' },
+  );
 
   const text = document.createElement('span');
   text.setAttribute('data-role', 'message');

@@ -55,6 +55,14 @@ body {
   margin-bottom: 32px;
 }
 
+.page-mascot {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  display: block;
+  margin-bottom: 12px;
+}
+
 .page-title {
   font-size: 24px;
   font-weight: 700;

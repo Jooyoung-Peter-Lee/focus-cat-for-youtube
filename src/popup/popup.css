@@ -62,10 +62,32 @@ body {
 }
 
 .header-cat {
-  font-size: 18px;
-  line-height: 1;
-  user-select: none;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
 }
+
+@keyframes fc-popup-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  45%      { transform: translateY(-4px) rotate(-2deg); }
+}
+@keyframes fc-popup-wave {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25%      { transform: translateY(-4px) rotate(-4deg); }
+  75%      { transform: translateY(-2px) rotate(2deg); }
+}
+@keyframes fc-popup-roar {
+  0%, 100% { transform: scale(1)    rotate(0deg); }
+  20%      { transform: scale(1.07) rotate(-4deg); }
+  50%      { transform: scale(1.09) rotate(4deg); }
+  80%      { transform: scale(1.05) rotate(-2deg); }
+}
+
+.cat-anim-float { animation: fc-popup-float 3s ease-in-out infinite; }
+.cat-anim-wave  { animation: fc-popup-wave  2s ease-in-out infinite; }
+.cat-anim-roar  { animation: fc-popup-roar 1.2s ease-in-out infinite; }
 
 .header-brand {
   font-size: 14px;

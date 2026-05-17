@@ -50,6 +50,17 @@
     "https://focus-cat-api.vercel.app/*"
   ],
 
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/cat/cutycat.png",
+        "assets/cat/cutycat_roar.png",
+        "assets/cat/cutycat_juststand.png"
+      ],
+      "matches": ["*://www.youtube.com/*"]
+    }
+  ],
+
   "content_security_policy": {
     "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src https://focus-cat-api.vercel.app"
   }

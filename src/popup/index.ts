@@ -73,6 +73,20 @@ const barFillEl    = el('bar-fill');
 const barPctEl     = el('bar-pct');
 const statusMsgEl  = el('status-msg');
 const settingsBtn  = el<HTMLButtonElement>('settings-btn');
+const catImgEl     = el<HTMLImageElement>('cat-img');
+
+const CAT_IMAGES: Record<DisplayState, string> = {
+  nolimit:  '../../assets/cat/cutycat_juststand.png',
+  under:    '../../assets/cat/cutycat_juststand.png',
+  warning:  '../../assets/cat/cutycat.png',
+  exceeded: '../../assets/cat/cutycat_roar.png',
+};
+const CAT_ANIM_CLASSES: Record<DisplayState, string> = {
+  nolimit:  'header-cat cat-anim-float',
+  under:    'header-cat cat-anim-float',
+  warning:  'header-cat cat-anim-wave',
+  exceeded: 'header-cat cat-anim-roar',
+};
 
 // ── Render ────────────────────────────────────────────────────────────────
 
@@ -130,6 +144,10 @@ function render(usedSeconds: number, settings: Settings, extensionSeconds = 0): 
 
   // State attribute drives CSS accent colour
   document.documentElement.setAttribute('data-state', state);
+
+  // Cat image + animation
+  catImgEl.src       = CAT_IMAGES[state];
+  catImgEl.className = CAT_ANIM_CLASSES[state];
 
   // First render: swap loading → content
   viewLoading.classList.add('hidden');

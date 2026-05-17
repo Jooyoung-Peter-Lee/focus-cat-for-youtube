@@ -44,143 +44,13 @@
 
 import { formatSeconds } from '../../shared/timeUtils';
 
-// ─── Animated cat SVG ────────────────────────────────────────────────────────
+// ─── Cat image URL ───────────────────────────────────────────────────────────
 //
-// Inlined directly so no fetch, chrome.runtime.getURL, or web_accessible_resources
-// entry is needed. The SVG's <defs><style> rules are scoped to #focus-cat-svg
-// so they cannot leak into the host page. Keyframe names are fc-prefixed for
-// the same reason. The XML declaration is omitted — it is invalid inside innerHTML.
+// Resolved via chrome.runtime.getURL so the content script can reference the
+// extension asset. The file is declared in web_accessible_resources in manifest.json.
 
-const CAT_SVG = `
-<svg xmlns="http://www.w3.org/2000/svg" id="focus-cat-svg" viewBox="0 0 512 512"
-     overflow="hidden" style="display:block;width:100%;height:100%">
-  <title>Focus Cat</title>
-  <defs>
-    <style>
-      #focus-cat-svg .stroke    { fill: none; stroke: #1f1a17; stroke-width: 22; stroke-linecap: round; stroke-linejoin: round; }
-      #focus-cat-svg .fill-dark { fill: #1f1a17; }
-      #focus-cat-svg .fill-pink { fill: #f6a6a8; }
-      #focus-cat-svg .fill-star { fill: #f4c64f; }
-      #focus-cat-svg .shadow    { fill: #efe4d2; opacity: 0.65; }
+const CAT_ROAR_URL = chrome.runtime.getURL('assets/cat/cutycat_roar.png');
 
-      #fc-eye-left, #fc-eye-right {
-        transform-box: fill-box;
-        transform-origin: center;
-        animation: fc-blink 4s ease-in-out infinite;
-      }
-      #fc-eye-right { animation-delay: 0.06s; }
-      @keyframes fc-blink {
-        0%, 91%, 96%, 100% { transform: scaleY(1);    }
-        93.5%              { transform: scaleY(0.08); }
-      }
-
-      #fc-ear-right {
-        transform-box: fill-box;
-        transform-origin: center bottom;
-        animation: fc-ear-twitch 5s ease-in-out infinite;
-        animation-delay: 1.2s;
-      }
-      @keyframes fc-ear-twitch {
-        0%, 84%, 96%, 100% { transform: rotate(0deg);   }
-        88%                { transform: rotate(-10deg); }
-        91%                { transform: rotate(5deg);   }
-        94%                { transform: rotate(-2deg);  }
-      }
-
-      #fc-star {
-        transform-box: fill-box;
-        transform-origin: center;
-        animation: fc-star-pulse 2.4s ease-in-out infinite;
-      }
-      @keyframes fc-star-pulse {
-        0%, 100% { transform: scale(1);    opacity: 1;   }
-        50%      { transform: scale(1.35); opacity: 0.8; }
-      }
-
-      #fc-head-group {
-        transform-box: fill-box;
-        transform-origin: center;
-        animation: fc-head-tilt 10s ease-in-out infinite;
-        animation-delay: 2s;
-      }
-      @keyframes fc-head-tilt {
-        0%, 60%   { transform: rotate(0deg);  }
-        65%       { transform: rotate(-2deg); }
-        70%       { transform: rotate(0deg);  }
-        77%       { transform: rotate(-3deg); }
-        80%       { transform: rotate(5deg);  }
-        87%, 100% { transform: rotate(0deg);  }
-      }
-
-      #fc-eye-right-g {
-        transform-box: fill-box;
-        transform-origin: center;
-        animation: fc-groom-squint 10s ease-in-out infinite;
-        animation-delay: 2s;
-      }
-      @keyframes fc-groom-squint {
-        0%, 75%   { transform: scaleY(1);   }
-        79%       { transform: scaleY(0.2); }
-        82%       { transform: scaleY(0.2); }
-        86%, 100% { transform: scaleY(1);   }
-      }
-
-      #fc-paw {
-        transform-box: fill-box;
-        transform-origin: center;
-        animation: fc-paw-groom 10s ease-in-out infinite;
-        animation-delay: 2s;
-      }
-      @keyframes fc-paw-groom {
-        0%, 63%  { transform: translate(0px,   130px);                opacity: 0;   }
-        70%      { transform: translate(0px,     0px);                opacity: 1;   }
-        73%      { transform: translate(0px,    16px);                opacity: 1;   }
-        76%      { transform: translate(0px,     0px);                opacity: 1;   }
-        83%      { transform: translate(80px,  -50px) rotate(-20deg); opacity: 1;   }
-        88%      { transform: translate(20px,   65px) rotate(-6deg);  opacity: 0.3; }
-        93%      { transform: translate(0px,   130px);                opacity: 0;   }
-        100%     { transform: translate(0px,   130px);                opacity: 0;   }
-      }
-    </style>
-  </defs>
-
-  <g id="fc-head-group">
-    <ellipse class="shadow" cx="256" cy="410" rx="160" ry="44"/>
-    <path class="stroke" d="M 140 214 C 110 250, 104 294, 118 335 C 136 388, 188 414, 256 414 C 324 414, 376 388, 394 335 C 408 294, 402 250, 372 214 C 350 188, 316 172, 256 172 C 196 172, 162 188, 140 214 Z"/>
-    <g id="fc-ear-left">
-      <path class="stroke" d="M 170 206 L 190 138 L 234 184"/>
-      <path class="fill-pink" d="M 189 160 L 202 146 L 220 170 L 203 181 Z" opacity="0.9"/>
-    </g>
-    <g id="fc-ear-right">
-      <path class="stroke" d="M 342 206 L 322 138 L 278 184"/>
-      <path class="fill-pink" d="M 323 160 L 310 146 L 292 170 L 309 181 Z" opacity="0.9"/>
-    </g>
-    <circle id="fc-eye-left" class="fill-dark" cx="206" cy="266" r="20"/>
-    <g id="fc-eye-right-g">
-      <circle id="fc-eye-right" class="fill-dark" cx="306" cy="266" r="20"/>
-    </g>
-    <path class="stroke" d="M 240 310 C 247 320, 256 320, 263 310"/>
-    <path class="stroke" d="M 263 310 C 270 320, 279 320, 286 310"/>
-    <path class="fill-pink" d="M 166 298 C 182 285, 206 287, 216 304 C 205 322, 182 326, 166 313 Z" opacity="0.55"/>
-    <path class="fill-pink" d="M 346 298 C 330 285, 306 287, 296 304 C 307 322, 330 326, 346 313 Z" opacity="0.55"/>
-    <path class="stroke" d="M 116 276 L 156 286"/>
-    <path class="stroke" d="M 114 308 L 156 306"/>
-    <path class="stroke" d="M 396 276 L 356 286"/>
-    <path class="stroke" d="M 398 308 L 356 306"/>
-    <path id="fc-star" class="fill-star" d="M 406 164 C 416 164, 424 172, 424 182 C 424 172, 432 164, 442 164 C 432 164, 424 156, 424 146 C 424 156, 416 164, 406 164 Z"/>
-    <g id="fc-paw">
-      <circle cx="197" cy="358" r="15" fill="#efe4d2" stroke="#1f1a17" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="221" cy="351" r="15" fill="#efe4d2" stroke="#1f1a17" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="245" cy="358" r="15" fill="#efe4d2" stroke="#1f1a17" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
-      <ellipse cx="221" cy="383" rx="40" ry="28" fill="#efe4d2" stroke="#1f1a17" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle  cx="204" cy="377" r="7"  fill="#d4b896"/>
-      <circle  cx="221" cy="374" r="7"  fill="#d4b896"/>
-      <circle  cx="238" cy="377" r="7"  fill="#d4b896"/>
-      <ellipse cx="221" cy="391" rx="9" ry="7" fill="#d4b896"/>
-    </g>
-  </g>
-</svg>
-`;
 
 // ─── Exported types ─────────────────────────────────────────────────────────
 
@@ -393,17 +263,29 @@ function buildOverlay(options: OverlayMountOptions): HTMLDivElement {
     'flex-shrink: 0',
   ]);
 
-  // ── Cat (animated SVG) ───────────────────────────────────────────────────
-  const catEl = document.createElement('div');
+  // ── Cat image ─────────────────────────────────────────────────────────────
+  const catEl = document.createElement('img');
   catEl.setAttribute('aria-hidden', 'true');
+  catEl.src = CAT_ROAR_URL;
+  catEl.alt = '';
   catEl.style.cssText = cssText([
     'width: 160px',
     'height: 160px',
     'margin: 0 auto 16px',
+    'display: block',
+    'object-fit: contain',
     'user-select: none',
-    'line-height: 0',
   ]);
-  catEl.innerHTML = CAT_SVG;
+  catEl.animate(
+    [
+      { transform: 'translateY(0px) rotate(0deg) scale(1)' },
+      { transform: 'translateY(-10px) rotate(-4deg) scale(1.06)' },
+      { transform: 'translateY(-8px) rotate(4deg) scale(1.08)' },
+      { transform: 'translateY(-4px) rotate(-2deg) scale(1.04)' },
+      { transform: 'translateY(0px) rotate(0deg) scale(1)' },
+    ],
+    { duration: 1800, iterations: Infinity, easing: 'ease-in-out' },
+  );
 
   // ── Heading ───────────────────────────────────────────────────────────────
   // h2 rather than h1: the YouTube page already owns the h1 (video title).
