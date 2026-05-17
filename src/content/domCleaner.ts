@@ -45,6 +45,7 @@
 // All CSS rules use !important to win over YouTube's own inline style updates.
 
 import type { Settings } from '../shared/types';
+import { injectHomePlaceholder, removeHomePlaceholder } from './homePlaceholder';
 
 const STYLE_ELEMENT_ID = 'focus-cat-cleaner';
 const DEBOUNCE_MS = 16;
@@ -197,6 +198,12 @@ function removeTargetedElements(settings: Settings): void {
       }
     }
   }
+
+  if (settings.hideHomeRecommendations) {
+    injectHomePlaceholder();
+  } else {
+    removeHomePlaceholder();
+  }
 }
 
 /**
@@ -297,6 +304,7 @@ export function applyCleaning(settings: Settings): void {
 export function removeCleaning(): void {
   document.getElementById(STYLE_ELEMENT_ID)?.remove();
   stopDomObserver();
+  removeHomePlaceholder();
 }
 
 // ─── CSS helpers ───────────────────────────────────────────────────────────
