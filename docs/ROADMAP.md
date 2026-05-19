@@ -50,9 +50,10 @@ Backend: Vercel serverless + Supabase
 ✅ LemonSqueezy 상품 생성 ($4.99 one-time, license key 발급 설정 완료)
 ✅ Options 페이지에 구매 링크 추가
 
-⬜ LemonSqueezy 스토어 활성화 🔴 블로커
-   → 원인: 세금 정보 미제출 (PayPal 아님)
-   → W-9 양식 + SSN 필요 (미국 그린카드 보유 + 한국 거주)
+⬜ LemonSqueezy 스토어 활성화
+   → 온보딩 심사 신청 완료 (2026-05-19), LS 팀 검토 대기 중
+   → 랜딩 페이지 + 데모 영상 링크 제출 완료
+   → W-9 세금 정보 제출 별도 필요 (미국 그린카드 + 한국 거주)
 ⬜ End-to-end 테스트 (실제 키 구매 → 활성화)
 
 ✅ GitHub 레포 생성 + 초기 커밋 (github.com/Jooyoung-Peter-Lee/focus-cat-for-youtube)
