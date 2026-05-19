@@ -71,7 +71,8 @@ Backend: Vercel serverless + Supabase
 ✅ Lemon Squeezy 제출 텍스트 작성 (docs/store/lemonsqueezy-submission.md) — 2026-04-24
    - Business description, Product description, Fulfillment, Refund policy, Privacy summary, ToS summary
 
-⬜ 랜딩 페이지 호스팅 (GitHub Pages 또는 별도 도메인)
+✅ 랜딩 페이지 호스팅 (GitHub Pages) — 2026-05-19 배포 완료
+   - URL: https://jooyoung-peter-lee.github.io/focus-cat-for-youtube/landing/
 ⬜ Chrome Developer 계정 등록 ($5 one-time)
 ⬜ Store submission & review
 
