@@ -59,12 +59,12 @@ Backend: Vercel serverless + Supabase
 ✅ 개인정보처리방침 작성 (docs/store/privacy-policy.html) — GitHub Pages 배포 완료
 ✅ 스토어 설명문 초안 (docs/store/store-listing.md)
 ✅ 스크린샷 촬영 가이드 (docs/store/screenshot-guide.md)
-✅ 스크린샷 5장 실제 촬영 완료 (2026-04-24)
-   - shot1-clean-youtube.png
-   - shot2-warning-banner.png
-   - shot3-overlay-soft.png
-   - shot4-overlay-hard.png
-   - shot5-options-page.png
+✅ 스크린샷 5장 촬영 완료 (shot3~5 재촬영 2026-05-19)
+   - shot1-clean-youtube.png (2026-04-24)
+   - shot2-warning-banner.png (2026-04-24)
+   - shot3-overlay-soft.png (재촬영 — 실사 고양이 UI)
+   - shot4-overlay-hard.png (재촬영 — 실사 고양이 UI)
+   - shot5-options-page.png (재촬영 — 실사 고양이 UI)
 ✅ 랜딩 페이지 제작 (docs/landing/index.html) — 2026-04-24
    - 단일 파일 HTML, 외부 의존성 없음
    - Hero / 기능 설명 / Soft vs Hard / Pricing / License 활성화 / FAQ / Privacy Policy / ToS 포함
@@ -73,7 +73,7 @@ Backend: Vercel serverless + Supabase
 
 ✅ 랜딩 페이지 호스팅 (GitHub Pages) — 2026-05-19 배포 완료
    - URL: https://jooyoung-peter-lee.github.io/focus-cat-for-youtube/landing/
-⬜ Chrome Developer 계정 등록 ($5 one-time)
+✅ Chrome Developer 계정 등록 ($5 one-time) — 2026-05-19 완료
 ⬜ Store submission & review
 
 Goal:
