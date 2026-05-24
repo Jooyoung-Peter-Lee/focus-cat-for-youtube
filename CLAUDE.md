@@ -105,7 +105,7 @@ background → content: `LIMIT_STATE_UPDATE`
    - 한국 거주 + 미국 영주권 → W-9 양식 + SSN 필요
 ⬜ Lemon Squeezy 스토어 활성화
 ⬜ End-to-end 테스트 (실제 키 구매 → 입력 → Pro 활성화 확인)
-⬜ Chrome Developer 계정 등록 ($5 one-time)
+✅ Chrome Developer 계정 등록 ($5 one-time) — 2026-05-19 완료
 ⬜ Store 제출 & 심사
 
 ### Phase 4, 5 — 미착수
