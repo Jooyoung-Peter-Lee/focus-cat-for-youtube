@@ -621,6 +621,37 @@
       color: var(--text);
     }
 
+    /* ─── Benefits Recap ────────────────────────────────────────────────────── */
+    .benefits-recap-section { text-align: center; }
+    .benefits-recap-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .benefits-recap-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px 32px;
+      margin-bottom: 32px;
+    }
+    .benefits-recap-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      color: var(--text);
+    }
+    .benefits-recap-icon { font-size: 18px; }
+    .benefits-recap-stat {
+      font-size: 17px;
+      color: var(--text-muted);
+    }
+    .benefits-recap-stat strong { color: var(--text); }
+
     /* ─── Pricing ───────────────────────────────────────────────────────────── */
     .pricing-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
@@ -1217,6 +1248,35 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- Benefits Recap                                                            -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<section class="section benefits-recap-section">
+  <div class="container">
+    <p class="benefits-recap-label">What you get</p>
+    <div class="benefits-recap-grid">
+      <div class="benefits-recap-item">
+        <span class="benefits-recap-icon">🚫</span>
+        <span>Recommendations hidden</span>
+      </div>
+      <div class="benefits-recap-item">
+        <span class="benefits-recap-icon">⏱</span>
+        <span>Daily time limit you actually keep</span>
+      </div>
+      <div class="benefits-recap-item">
+        <span class="benefits-recap-icon">📵</span>
+        <span>Shorts blocked</span>
+      </div>
+      <div class="benefits-recap-item">
+        <span class="benefits-recap-icon">🔒</span>
+        <span>Your data stays on your device</span>
+      </div>
+    </div>
+    <p class="benefits-recap-stat">
+      Saving just 20 minutes a day adds up to <strong>121 hours a year.</strong>
+    </p>
+  </div>
+</section>
+
 <!-- Pricing                                                                   -->
 <!-- ══════════════════════════════════════════════════════════════════════════ -->
 <section class="section section-alt" id="pricing">
