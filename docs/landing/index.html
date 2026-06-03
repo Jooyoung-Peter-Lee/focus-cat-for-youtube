@@ -224,14 +224,40 @@
       padding: 80px 24px;
       text-align: center;
     }
-    .pain-quote {
+    .pain-title {
       font-size: clamp(22px, 3.5vw, 34px);
       font-weight: 700;
       line-height: 1.45;
       color: #F5F5F4;
       max-width: 680px;
-      margin: 0 auto 24px;
+      margin: 0 auto 32px;
       letter-spacing: -0.015em;
+    }
+    .pain-steps {
+      list-style: none;
+      padding: 0;
+      margin: 0 auto 32px;
+      max-width: 420px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .pain-steps li {
+      font-size: 17px;
+      color: #D6D3D1;
+      padding-left: 24px;
+      position: relative;
+    }
+    .pain-steps li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #A78BFA;
+    }
+    .pain-steps li.pain-step-final {
+      color: #F5F5F4;
+      font-weight: 700;
     }
     .pain-quote em { color: #A78BFA; font-style: normal; }
     .pain-sub {
@@ -895,14 +921,16 @@
 <!-- Pain Hook                                                                 -->
 <!-- ══════════════════════════════════════════════════════════════════════════ -->
 <section class="pain-section">
-  <p class="pain-quote">
-    "I opened YouTube for <em>one video</em><br>
-    and somehow it was 2 hours later."
-  </p>
+  <p class="pain-title">Does This Sound Familiar?</p>
+  <ul class="pain-steps">
+    <li>You open YouTube to watch one video.</li>
+    <li>A recommended video catches your eye.</li>
+    <li>Then another. Then Shorts.</li>
+    <li class="pain-step-final">Suddenly it's midnight.</li>
+  </ul>
   <p class="pain-sub">
-    You're not weak — YouTube is engineered to keep you watching.
-    Focus Cat is a calm companion that helps you take back control,
-    without giving up YouTube entirely.
+    You don't need more willpower.<br>
+    You need fewer distractions.
   </p>
 </section>
 
