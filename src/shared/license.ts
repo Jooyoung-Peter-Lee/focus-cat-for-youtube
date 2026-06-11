@@ -109,16 +109,26 @@ export type ActivateResult =
 /**
  * Sends the license key to the backend for activation with Lemon Squeezy.
  *
- * On success: persists { status: 'pro', licenseKey } to storage.
+ * Passes the stored instanceId (if any) so the backend can deactivate the
+ * previous slot before creating a new one — enabling re-installs without
+ * consuming an extra activation slot.
+ *
+ * On success: persists { status: 'pro', licenseKey, instanceId } to storage.
  * On failure: returns an error code — caller shows the appropriate message.
  */
 export async function activateLicenseKey(key: string): Promise<ActivateResult> {
+  const normalizedKey = key.trim().toUpperCase();
+
+  // Include the stored instanceId so the backend can release the old slot.
+  const current = await getLicenseState();
+  const instanceId = current.licenseKey === normalizedKey ? current.instanceId : undefined;
+
   let res: Response;
   try {
     res = await fetch(VERIFY_ENDPOINT, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ licenseKey: key }),
+      body:    JSON.stringify({ licenseKey: key, instanceId }),
     });
   } catch {
     return { ok: false, error: 'network_error' };
@@ -128,8 +138,9 @@ export async function activateLicenseKey(key: string): Promise<ActivateResult> {
   if (res.status === 409) return { ok: false, error: 'already_used' };
   if (!res.ok)            return { ok: false, error: 'network_error' };
 
-  await setLicenseState({ status: 'pro', licenseKey: key.trim().toUpperCase() });
-  return { ok: true, licenseKey: key.trim().toUpperCase() };
+  const body = await res.json() as { instanceId?: string };
+  await setLicenseState({ status: 'pro', licenseKey: normalizedKey, instanceId: body.instanceId });
+  return { ok: true, licenseKey: normalizedKey };
 }
 
 const DEACTIVATE_ENDPOINT = 'https://focus-cat-api.vercel.app/api/deactivate-license';
@@ -148,7 +159,7 @@ export async function deactivateLicenseKey(): Promise<void> {
       await fetch(DEACTIVATE_ENDPOINT, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ licenseKey: current.licenseKey }),
+        body:    JSON.stringify({ licenseKey: current.licenseKey, instanceId: current.instanceId }),
       });
     } catch {
       // Network failure — proceed with local deactivation anyway.

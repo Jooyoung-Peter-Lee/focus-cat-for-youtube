@@ -18,6 +18,8 @@ export interface LicenseState {
   status: LicenseStatus;
   /** Opaque key issued after purchase. Undefined on free tier. */
   licenseKey?: string;
+  /** Lemon Squeezy instance UUID returned on activation. Used to deactivate the correct slot on re-install. */
+  instanceId?: string;
   /** Expiry as epoch ms. Undefined means lifetime (no expiry). */
   expiresAt?: number;
 }
