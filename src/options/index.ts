@@ -156,7 +156,7 @@ licenseActivateBtn.addEventListener('click', () => {
       }
       const msg =
         result.error === 'already_used'
-          ? 'This key is already activated on another device.'
+          ? 'Device limit reached (up to 5 devices). Deactivate on an existing device first, or email leepeter139@gmail.com to reset.'
           : result.error === 'network_error'
           ? 'Could not reach the server. Check your connection.'
           : 'Invalid license key. Please check and try again.';
