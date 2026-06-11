@@ -96,6 +96,9 @@ let lastWarningState: Extract<LimitState, { kind: 'warning' }> | null = null;
 /** Debounce handle for requestReattach(). */
 let reattachTimer: ReturnType<typeof setTimeout> | null = null;
 
+/** URL at the time the user last dismissed the overlay. Null if not dismissed. */
+let dismissedAtUrl: string | null = null;
+
 // ─── Public API ──────────────────────────────────────────────────────────────
 
 /**
@@ -151,6 +154,11 @@ export function initOverlayController(): void {
  */
 export function updateOverlayState(limitState: LimitState): void {
   if (limitState.kind === 'exceeded') {
+    // If the user dismissed on this exact URL, don't re-show until they navigate.
+    if (dismissedAtUrl !== null && dismissedAtUrl === location.href) {
+      lastExceededState = limitState; // keep fresh for when URL changes
+      return;
+    }
     desiredShown      = true;
     desiredBanner     = false;
     lastExceededState = limitState;
@@ -224,6 +232,7 @@ export function destroyOverlayController(): void {
   licenseState      = { status: 'free' };
   lastExceededState = null;
   lastWarningState  = null;
+  dismissedAtUrl    = null;
 }
 
 // ─── Reattach logic ──────────────────────────────────────────────────────────
@@ -289,7 +298,8 @@ function doReattach(): void {
  * navigation signals until the background pushes a new 'exceeded' state.
  */
 function handleUserDismiss(): void {
-  desiredShown = false;
+  desiredShown    = false;
+  dismissedAtUrl  = location.href;
 }
 
 /**
