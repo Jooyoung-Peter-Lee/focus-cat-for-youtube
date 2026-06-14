@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Focus Cat for YouTube",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Gently limit your daily YouTube watch time and remove distractions. Your cat is slightly disappointed — but supportive.",
 
   "icons": {
