@@ -70,6 +70,8 @@ export interface OverlayMountOptions {
   limitMs: number;
   /** When true, the "+ 5 more minutes" button is rendered (Soft mode only). */
   proEnabled: boolean;
+  /** When true, Pro user already used their extension today — show "used" state instead of upgrade prompt. */
+  alreadyExtendedToday: boolean;
   /**
    * When true, pauses the video inside `player` immediately on mount.
    * Hard mode sets this to true; Soft mode leaves the video playing.
@@ -103,6 +105,12 @@ let savedPlayerRef: HTMLElement | null = null;
  * null means we did NOT change the player's position style this session.
  */
 let savedPlayerInlinePosition: string | null = null;
+
+/**
+ * Cleanup function for Hard mode document-level keyboard listeners and
+ * video keep-paused guard. Called on unmount.
+ */
+let hardModeCleanup: (() => void) | null = null;
 
 // ─── Public API ─────────────────────────────────────────────────────────────
 
@@ -142,6 +150,29 @@ export function mountOverlay(player: HTMLElement, options: OverlayMountOptions):
   if (options.pauseOnMount) {
     pauseVideoIn(player);
   }
+
+  // Hard mode: block keyboard shortcuts at the document level so YouTube's
+  // global handlers (Space, K, arrow keys) cannot reach the video behind the overlay.
+  // root-level capture (added in buildOverlay) is not enough — YouTube attaches
+  // its own capture-phase listeners to document, which fire before ours on root.
+  if (options.mode === 'hard') {
+    // Use window-level capture to intercept before YouTube's document-level handlers.
+    const stopKeydown = (e: Event): void => { e.stopPropagation(); e.stopImmediatePropagation(); e.preventDefault(); };
+    const stopKeyup   = (e: Event): void => { e.stopPropagation(); e.stopImmediatePropagation(); e.preventDefault(); };
+    window.addEventListener('keydown', stopKeydown, true);
+    window.addEventListener('keyup',   stopKeyup,   true);
+
+    // Keep the video paused — re-pause immediately if anything resumes it.
+    const video = player.querySelector<HTMLVideoElement>('video');
+    const keepPaused = (): void => { video?.pause(); };
+    video?.addEventListener('play', keepPaused);
+
+    hardModeCleanup = () => {
+      window.removeEventListener('keydown', stopKeydown, true);
+      window.removeEventListener('keyup',   stopKeyup,   true);
+      video?.removeEventListener('play', keepPaused);
+    };
+  }
 }
 
 /**
@@ -160,6 +191,9 @@ export function unmountOverlay(): void {
   }
   savedPlayerRef            = null;
   savedPlayerInlinePosition = null;
+
+  hardModeCleanup?.();
+  hardModeCleanup = null;
 }
 
 /**
@@ -210,7 +244,7 @@ export function isOverlayMounted(): boolean {
 // ─── DOM construction ────────────────────────────────────────────────────────
 
 function buildOverlay(options: OverlayMountOptions): HTMLDivElement {
-  const { mode, usedMs, limitMs, proEnabled, onDismiss, onExtend } = options;
+  const { mode, usedMs, limitMs, proEnabled, alreadyExtendedToday, onDismiss, onExtend } = options;
   const isHard = mode === 'hard';
 
   // ── Root backdrop ──────────────────────────────────────────────────────────
@@ -349,12 +383,14 @@ function buildOverlay(options: OverlayMountOptions): HTMLDivElement {
     });
     buttonRow.appendChild(dismissBtn);
 
-    // +5 min: Pro users get the extend button; free users see a locked upgrade prompt.
+    // +5 min: three states depending on Pro status and daily usage.
     if (proEnabled) {
       const extendBtn = buildButton('+ 5 more minutes', '#ff4444', '#ffffff', () => {
         fadeOutAndUnmount(onExtend);
       });
       buttonRow.appendChild(extendBtn);
+    } else if (alreadyExtendedToday) {
+      buttonRow.appendChild(buildAlreadyExtendedButton());
     } else {
       buttonRow.appendChild(buildUpgradeButton());
     }
@@ -367,6 +403,31 @@ function buildOverlay(options: OverlayMountOptions): HTMLDivElement {
 }
 
 // ─── Button factory ──────────────────────────────────────────────────────────
+
+/**
+ * Disabled button shown when the Pro user has already used their daily extension.
+ * Not clickable — communicates the state without offering an action.
+ */
+function buildAlreadyExtendedButton(): HTMLButtonElement {
+  const btn = document.createElement('button');
+  btn.type     = 'button';
+  btn.disabled = true;
+  btn.textContent = '✓ Already extended today';
+  btn.style.cssText = cssText([
+    'background: #f0f0f0',
+    'color: #999999',
+    'border: 1.5px solid #e0e0e0',
+    'border-radius: 10px',
+    'padding: 12px 22px',
+    'font-size: 14px',
+    'font-weight: 600',
+    'cursor: default',
+    'font-family: inherit',
+    'line-height: 1',
+    'flex-shrink: 0',
+  ]);
+  return btn;
+}
 
 /**
  * Locked upgrade button shown in Soft mode when the user is not on Pro.

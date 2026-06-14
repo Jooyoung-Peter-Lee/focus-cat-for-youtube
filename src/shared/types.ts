@@ -45,6 +45,8 @@ export interface TrackingState {
   playingTabId?: number;
   /** Total milliseconds added via "+N min" extensions today. Reset with daily reset. */
   extensionMs?: number;
+  /** True once the user has claimed their +5 min extension today. Reset with daily reset. */
+  extensionGrantedToday?: boolean;
 }
 
 export interface Settings {

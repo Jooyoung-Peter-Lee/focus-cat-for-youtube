@@ -278,10 +278,12 @@ function updateBannerPosition(banner: HTMLDivElement, player: HTMLElement): void
 
   const rect = player.getBoundingClientRect();
 
-  // If player is effectively not visible, remove the banner rather than leaving
-  // it floating in a stale position.
+  // If player has no dimensions yet (still rendering), hide visually and wait
+  // for a resize event to reposition — do NOT destroy the banner here, as this
+  // often fires immediately after mount before the browser has laid out the player.
   if (rect.width <= 0 || rect.height <= 0) {
-    hideWarningBanner();
+    banner.style.visibility = 'hidden';
+    banner.style.pointerEvents = 'none';
     return;
   }
 

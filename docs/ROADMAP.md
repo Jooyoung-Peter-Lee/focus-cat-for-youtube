@@ -50,31 +50,29 @@ Backend: Vercel serverless + Supabase
 ✅ LemonSqueezy 상품 생성 ($4.99 one-time, license key 발급 설정 완료)
 ✅ Options 페이지에 구매 링크 추가
 
-⬜ LemonSqueezy 스토어 활성화
-   → 온보딩 심사 신청 완료 (2026-05-19), LS 팀 검토 대기 중
-   → 랜딩 페이지 + 데모 영상 링크 제출 완료
-   → W-9 세금 정보 제출 별도 필요 (미국 그린카드 + 한국 거주)
+⬜ LemonSqueezy 스토어 활성화 🔴 블로커
+   → 원인: 세금 정보 미제출 (PayPal 아님)
+   → W-9 양식 + SSN 필요 (미국 그린카드 보유 + 한국 거주)
 ⬜ End-to-end 테스트 (실제 키 구매 → 활성화)
 
 ✅ GitHub 레포 생성 + 초기 커밋 (github.com/Jooyoung-Peter-Lee/focus-cat-for-youtube)
 ✅ 개인정보처리방침 작성 (docs/store/privacy-policy.html) — GitHub Pages 배포 완료
 ✅ 스토어 설명문 초안 (docs/store/store-listing.md)
 ✅ 스크린샷 촬영 가이드 (docs/store/screenshot-guide.md)
-✅ 스크린샷 5장 촬영 완료 (shot3~5 재촬영 2026-05-19)
-   - shot1-clean-youtube.png (2026-04-24)
-   - shot2-warning-banner.png (2026-04-24)
-   - shot3-overlay-soft.png (재촬영 — 실사 고양이 UI)
-   - shot4-overlay-hard.png (재촬영 — 실사 고양이 UI)
-   - shot5-options-page.png (재촬영 — 실사 고양이 UI)
+✅ 스크린샷 5장 실제 촬영 완료 (2026-04-24)
+   - shot1-clean-youtube.png
+   - shot2-warning-banner.png
+   - shot3-overlay-soft.png
+   - shot4-overlay-hard.png
+   - shot5-options-page.png
 ✅ 랜딩 페이지 제작 (docs/landing/index.html) — 2026-04-24
    - 단일 파일 HTML, 외부 의존성 없음
    - Hero / 기능 설명 / Soft vs Hard / Pricing / License 활성화 / FAQ / Privacy Policy / ToS 포함
 ✅ Lemon Squeezy 제출 텍스트 작성 (docs/store/lemonsqueezy-submission.md) — 2026-04-24
    - Business description, Product description, Fulfillment, Refund policy, Privacy summary, ToS summary
 
-✅ 랜딩 페이지 호스팅 (GitHub Pages) — 2026-05-19 배포 완료
-   - URL: https://jooyoung-peter-lee.github.io/focus-cat-for-youtube/landing/
-✅ Chrome Developer 계정 등록 ($5 one-time) — 2026-05-19 완료
+⬜ 랜딩 페이지 호스팅 (GitHub Pages 또는 별도 도메인)
+⬜ Chrome Developer 계정 등록 ($5 one-time)
 ⬜ Store submission & review
 
 Goal:

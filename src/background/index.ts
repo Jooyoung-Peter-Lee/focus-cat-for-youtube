@@ -222,7 +222,13 @@ chrome.runtime.onMessage.addListener(
       readTrackingState()
         .then(async (state) => {
           if (state === null) return;
-          const updated = { ...state, extensionMs: (state.extensionMs ?? 0) + extensionMs };
+          // Enforce the one-per-day cap advertised in the UI.
+          if (state.extensionGrantedToday) return;
+          const updated = {
+            ...state,
+            extensionMs: (state.extensionMs ?? 0) + extensionMs,
+            extensionGrantedToday: true,
+          };
           await writeTrackingState(updated);
           const { settings } = await readAll();
           await broadcastAndTrack(updated, settings);

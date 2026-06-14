@@ -48,5 +48,6 @@ function buildFreshState(): TrackingState {
   return {
     date: getTodayDateString(),
     accumulatedMs: 0,
+    extensionGrantedToday: false,
   };
 }

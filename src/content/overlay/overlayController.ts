@@ -40,11 +40,12 @@
 import type {
   LimitState,
   Settings,
+  TrackingState,
   BackgroundToContentMessage,
   ContentToBackgroundMessage,
 } from '../../shared/types';
 import { STORAGE_KEYS } from '../../shared/types';
-import { readSettings } from '../../shared/storage';
+import { readSettings, readTrackingState } from '../../shared/storage';
 import {
   getLicenseState,
   isProActive,
@@ -99,6 +100,9 @@ let reattachTimer: ReturnType<typeof setTimeout> | null = null;
 /** URL at the time the user last dismissed the overlay. Null if not dismissed. */
 let dismissedAtUrl: string | null = null;
 
+/** True once the +5 min extension has been used today. Reset with daily reset. */
+let extensionUsedToday = false;
+
 // ─── Public API ──────────────────────────────────────────────────────────────
 
 /**
@@ -133,6 +137,14 @@ export function initOverlayController(): void {
     .catch((err: unknown) => {
       console.error('[FocusCat] OverlayController: failed to read initial license state:', err);
       // Default { status: 'free' } remains in effect — safe fallback.
+    });
+
+  readTrackingState()
+    .then((state) => {
+      extensionUsedToday = state?.extensionGrantedToday ?? false;
+    })
+    .catch(() => {
+      // Default false remains — safe fallback.
     });
 
   chrome.storage.onChanged.addListener(handleStorageChange);
@@ -205,6 +217,12 @@ export function updateOverlayState(limitState: LimitState): void {
 export function requestReattach(): void {
   if (!desiredShown && !desiredBanner) return; // nothing to mount
 
+  // Navigation changed the URL away from where the user dismissed — lift the lock
+  // so the overlay can reappear if the limit is still exceeded on the new page.
+  if (dismissedAtUrl !== null && dismissedAtUrl !== location.href) {
+    dismissedAtUrl = null;
+  }
+
   if (reattachTimer !== null) clearTimeout(reattachTimer);
   reattachTimer = setTimeout(doReattach, REATTACH_DELAY_MS);
 }
@@ -226,13 +244,14 @@ export function destroyOverlayController(): void {
   chrome.storage.onChanged.removeListener(handleStorageChange);
   chrome.runtime.onMessage.removeListener(handleMessage);
 
-  desiredShown      = false;
-  desiredBanner     = false;
-  desiredMode       = 'soft';
-  licenseState      = { status: 'free' };
-  lastExceededState = null;
-  lastWarningState  = null;
-  dismissedAtUrl    = null;
+  desiredShown       = false;
+  desiredBanner      = false;
+  desiredMode        = 'soft';
+  licenseState       = { status: 'free' };
+  lastExceededState  = null;
+  lastWarningState   = null;
+  dismissedAtUrl     = null;
+  extensionUsedToday = false;
 }
 
 // ─── Reattach logic ──────────────────────────────────────────────────────────
@@ -275,14 +294,16 @@ function doReattach(): void {
   const player = document.getElementById(PLAYER_ID);
   if (player === null)             return; // playerWatcher will retry
 
+  const isPro = isProActive(licenseState);
   const options: OverlayMountOptions = {
-    mode:         desiredMode,
-    usedMs:       lastExceededState.usedMs,
-    limitMs:      lastExceededState.limitMs,
-    proEnabled:   isProActive(licenseState),
-    onDismiss:    handleUserDismiss,
-    onExtend:     handleUserExtend,
-    pauseOnMount: desiredMode === 'hard',
+    mode:                 desiredMode,
+    usedMs:               lastExceededState.usedMs,
+    limitMs:              lastExceededState.limitMs,
+    proEnabled:           isPro && !extensionUsedToday,
+    alreadyExtendedToday: isPro && extensionUsedToday,
+    onDismiss:            handleUserDismiss,
+    onExtend:             handleUserExtend,
+    pauseOnMount:         desiredMode === 'hard',
   };
 
   mountOverlay(player, options);
@@ -312,7 +333,8 @@ function handleUserDismiss(): void {
  * desiredShown = true and trigger a fresh reattach automatically.
  */
 function handleUserExtend(): void {
-  desiredShown = false;
+  desiredShown   = false;
+  dismissedAtUrl = null; // allow overlay to reappear after the extension expires
 
   const message: ContentToBackgroundMessage = {
     type:    'ADD_EXTENSION_MINUTES',
@@ -359,6 +381,12 @@ function handleStorageChange(
     const next = licenseChange.newValue as LicenseState;
     proChanged   = isProActive(next) !== isProActive(licenseState);
     licenseState = next;
+  }
+
+  const trackingChange = changes[STORAGE_KEYS.TRACKING_STATE];
+  if (trackingChange?.newValue !== undefined) {
+    const next = trackingChange.newValue as TrackingState;
+    extensionUsedToday = next.extensionGrantedToday ?? false;
   }
 
   // If a display-relevant setting changed while the overlay is active,

@@ -20,7 +20,7 @@
 
 import { readSettings } from '../shared/storage';
 import { applyCleaning } from './domCleaner';
-import { CONSTANTS } from '../shared/types';
+import { CONSTANTS, STORAGE_KEYS } from '../shared/types';
 import type {
   BackgroundToContentMessage,
   ContentToBackgroundMessage,
@@ -44,6 +44,9 @@ import {
 // ─── Module state ──────────────────────────────────────────────────────────
 
 let currentSettings: Settings | null = null;
+
+// Stored so cleanup() can remove it from chrome.storage.onChanged.
+let handleSettingsStorageChange: ((changes: { [key: string]: chrome.storage.StorageChange }, area: string) => void) | null = null;
 
 // Video tracking
 let currentVideo: HTMLVideoElement | null = null;
@@ -227,6 +230,10 @@ function cleanup(): void {
   destroyPlayerWatcher();
   detachVideoListeners();
   chrome.runtime.onMessage.removeListener(handleBackgroundMessage);
+  if (handleSettingsStorageChange !== null) {
+    chrome.storage.onChanged.removeListener(handleSettingsStorageChange);
+    handleSettingsStorageChange = null;
+  }
 }
 
 // ─── Init ──────────────────────────────────────────────────────────────────
@@ -262,6 +269,18 @@ async function init(): Promise<void> {
   // Must be registered before requestLimitState() to avoid a race where a pushed
   // SETTINGS_UPDATE arrives before the listener is ready.
   chrome.runtime.onMessage.addListener(handleBackgroundMessage);
+
+  // Re-apply DOM cleaning whenever settings change in storage.
+  // This makes content filter toggles (hide home, block Shorts, etc.) take effect
+  // in already-open YouTube tabs without requiring a page reload.
+  handleSettingsStorageChange = (changes, area) => {
+    if (area !== 'local' || !(STORAGE_KEYS.SETTINGS in changes)) return;
+    const newSettings = changes[STORAGE_KEYS.SETTINGS]?.newValue as Settings | undefined;
+    if (newSettings === undefined) return;
+    currentSettings = newSettings;
+    applyCleaning(currentSettings);
+  };
+  chrome.storage.onChanged.addListener(handleSettingsStorageChange);
 
   // Pull current LimitState from background; the direct response bypasses
   // onMessage listeners, so we forward it to the controller manually.
