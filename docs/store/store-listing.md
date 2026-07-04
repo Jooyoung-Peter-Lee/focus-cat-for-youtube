@@ -1,18 +1,18 @@
 # Chrome Web Store Listing Copy
 
-Last Updated: 2026-04-22
+Last Updated: 2026-07-05
 
 ---
 
 ## Extension Name
 
-Focus Cat for YouTube
+Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit
 
 ---
 
 ## Short Description (132 chars max)
 
-Gently limit your daily YouTube watch time. Your cat is slightly disappointed — but supportive.
+Set a daily YouTube time limit. Hide Shorts, recommendations & distractions. Your cat is slightly disappointed — but supportive.
 
 ---
 

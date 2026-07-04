@@ -1,4 +1,4 @@
-# 🐱 Focus Cat for YouTube
+# 🐱 Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit
 
 A privacy-first productivity Chrome Extension that helps users control their YouTube usage.
 

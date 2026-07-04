@@ -1,11 +1,11 @@
 # Lemon Squeezy Store Activation Materials
-# Focus Cat for YouTube
+# Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit
 
 ---
 
 ## 1. Business Description
 
-Focus Cat for YouTube is an independently developed Chrome browser extension that helps users manage their daily YouTube watching time. The product is a personal productivity tool. It is not affiliated with YouTube, Google, or any regulated industry (not financial, medical, adult, gambling, or otherwise regulated).
+Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit is an independently developed Chrome browser extension that helps users manage their daily YouTube watching time. The product is a personal productivity tool. It is not affiliated with YouTube, Google, or any regulated industry (not financial, medical, adult, gambling, or otherwise regulated).
 
 The business is operated by an individual developer (Peter Lee) based in South Korea, holding a U.S. green card. The product is a one-time purchase digital software license — no subscription, no recurring billing.
 
@@ -19,10 +19,10 @@ The business is operated by an individual developer (Peter Lee) based in South K
 
 ## 2. Product Description
 
-**Product name:** Focus Cat for YouTube — Pro License
+**Product name:** Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit — Pro License
 
 **What the product is:**
-Focus Cat for YouTube is a Chrome Extension (Manifest V3) that helps users limit how much time they spend watching YouTube each day. Users set a daily limit in minutes. When the limit is reached, an overlay appears over the YouTube video player. Users can also hide distracting recommendation surfaces such as the home page grid, the right-sidebar "Up next" list, and YouTube Shorts.
+Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit is a Chrome Extension (Manifest V3) that helps users limit how much time they spend watching YouTube each day. Users set a daily limit in minutes. When the limit is reached, an overlay appears over the YouTube video player. Users can also hide distracting recommendation surfaces such as the home page grid, the right-sidebar "Up next" list, and YouTube Shorts.
 
 **Who it is for:**
 Anyone who wants to intentionally reduce the amount of time they spend on YouTube. The extension is a voluntary self-management tool — it works entirely on the user's own device and does not restrict access at the network or account level.
@@ -50,7 +50,7 @@ Anyone who wants to intentionally reduce the amount of time they spend on YouTub
 After a successful purchase, Lemon Squeezy automatically sends the customer a unique license key by email. The license key is in the format XXXX-XXXX-XXXX-XXXX.
 
 **To activate Pro:**
-1. Install the Focus Cat for YouTube Chrome extension.
+1. Install the Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit Chrome extension.
 2. Click the Focus Cat icon in the Chrome toolbar to open the extension.
 3. Navigate to the Settings page.
 4. Paste the license key into the "License key" field.
@@ -58,8 +58,8 @@ After a successful purchase, Lemon Squeezy automatically sends the customer a un
 6. The extension verifies the key against the Lemon Squeezy API via our backend. Pro features activate immediately upon successful verification.
 
 **License terms:**
-- One license key = one active device at a time.
-- Users may transfer the license to another device by clicking "Deactivate" on the old device, then activating on the new device.
+- One license key = up to 5 active devices simultaneously.
+- Users may free up a slot by clicking "Deactivate" on an existing device, then activating on a new one.
 - There is no limit on the number of transfers.
 - No account or login is required beyond the license key.
 
@@ -130,9 +130,9 @@ We do not offer partial refunds or refunds after 14 days except at our discretio
 
 *(Full Terms of Service available at docs/landing/index.html#terms)*
 
-- Focus Cat for YouTube is a personal productivity Chrome extension.
+- Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit is a personal productivity Chrome extension.
 - It is not a financial product, medical device, adult content filter, gambling tool, or any regulated service.
-- The Pro license ($4.99 one-time) grants one activation at a time, transferable between the user's own devices.
+- The Pro license ($4.99 one-time) grants up to 5 simultaneous activations across the user's own devices.
 - Sharing or reselling license keys is not permitted.
 - The extension is provided "as is." We do not warrant specific results — the tool works when the user chooses to use it.
 - Refund: 14 days, full refund, no questions asked.

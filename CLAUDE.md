@@ -1,4 +1,4 @@
-# Focus Cat for YouTube — CLAUDE.md
+# Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit — CLAUDE.md
 
 Claude Code가 세션 시작 시 자동으로 읽는 컨텍스트 문서.
 엔지니어링 헌법은 `docs/CLAUDE_GUIDE.md` 참조.

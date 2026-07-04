@@ -1,5 +1,5 @@
 // build.mjs
-// esbuild orchestration for Focus Cat for YouTube.
+// esbuild orchestration for Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit.
 //
 // Produces four bundles into dist/:
 //   background.js  — MV3 service worker (ESM, Chrome can load native ES modules)

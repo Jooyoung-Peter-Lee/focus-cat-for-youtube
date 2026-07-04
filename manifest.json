@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Focus Cat for YouTube",
-  "version": "0.2.0",
-  "description": "Gently limit your daily YouTube watch time and remove distractions. Your cat is slightly disappointed — but supportive.",
+  "name": "Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit",
+  "version": "0.2.1",
+  "description": "Set a daily YouTube time limit. Hide Shorts, recommendations & distractions. Your cat is slightly disappointed — but supportive.",
 
   "icons": {
     "16":  "assets/icons/icon16.png",

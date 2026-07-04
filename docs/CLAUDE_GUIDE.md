@@ -1,5 +1,5 @@
 # 🐱 CLAUDE_GUIDE.md
-Focus Cat for YouTube — AI Engineering Constitution
+Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit — AI Engineering Constitution
 
 This document defines how Claude must behave when working on this project.
 
@@ -11,7 +11,7 @@ All generated code must be production-quality.
 # 1️⃣ PROJECT IDENTITY
 
 Project Name:
-Focus Cat for YouTube
+Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit
 
 Category:
 Productivity Chrome Extension

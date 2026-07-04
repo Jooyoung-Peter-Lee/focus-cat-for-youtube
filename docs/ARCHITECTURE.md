@@ -1,4 +1,4 @@
-# Focus Cat for YouTube
+# Focus Cat — Hide YouTube Shorts & Set a Daily Time Limit
 
 ## Architecture (Manifest V3 – Event Driven Time Tracking)
 
