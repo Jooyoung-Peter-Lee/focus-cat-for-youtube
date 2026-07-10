@@ -3,3 +3,10 @@ dist/
 *.js.map
 .env
 .env.local
+
+# Internal business/strategy docs — not for the public repo
+CLAUDE.md
+docs/ROADMAP.md
+docs/CLAUDE_GUIDE.md
+docs/ARCHITECTURE.md
+docs/store/lemonsqueezy-submission.md
